@@ -5,6 +5,7 @@ const { useValidPassword } = require("../utils/crypt-password.util");
 const { Router } = require("express");
 const Users = require("../models/user.model");
 const passport = require("passport");
+const { generateToken } = require("../utils/jwt.util");
 
 const router = Router();
 
@@ -12,21 +13,26 @@ router.post("/login", async (req, res) => {
     try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email });
+      console.log(user);
 
       // No existe el email?
       if (!user) {
         return res.status(400).json({ error: "Bad request"});
       }
-      // // Crear la sesión de un usuario
-      // req.session.user = {
-      //   first_name: req.user.first_name,
-      //   last_name: req.user.last_name,
-      //   email: req.user.email,
-      //   role: req.user.role,
-      // };
 
+      // No es válido el password?
+      if (!useValidPassword(user, password)) {
+        return res.status(400).json({ error: "Bad request" });
+      }
 
-      res.json({ status: "Success", message: "Logged" });
+      const tokenInfo = {
+        id: user._id,
+        role: user.role,
+      };
+
+      const token = generateToken(tokenInfo);
+
+      res.json({ status: "Success", message: "Logged", token });
 
     } catch (error) {
       console.log(error);
