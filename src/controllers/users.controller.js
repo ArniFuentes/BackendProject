@@ -3,10 +3,25 @@
 // const { createHash } = require("../utils/crypt-password.util");
 
 const { Router } = require("express");
-// const Users = require("../models/user.model");
 const passport = require("passport");
+const Users = require("../models/user.model");
+// const { authenticateMddlaware } = require("../utils/jwt.util");
 
 const router = Router();
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const users = await Users.find();
+      console.log(req.user);
+      res.json({ message: users });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 router.post(
   "/",

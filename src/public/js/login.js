@@ -1,4 +1,4 @@
-// Al el formulario, realizar una solicitud HTTP POST
+// Realizar una solicitud HTTP POST
 
 const form = document.getElementById("loginForm");
 
