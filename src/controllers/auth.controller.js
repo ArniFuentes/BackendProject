@@ -8,23 +8,26 @@ const passport = require("passport");
 
 const router = Router();
 
-// Crear una sesión
-router.post(
-  "/login",
-  passport.authenticate("login", { failureRedirect: "/auth/fail-login" }),
-  async (req, res) => {
+router.post("/login", async (req, res) => {
     try {
-      console.log(req.user)
-      // Crear la sesión de un usuario
-      req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        role: req.user.role,
-      };
+      const { email, password } = req.body;
+      const user = await Users.findOne({ email });
 
-      // // Redireccionar al perfil después de iniciar sesión
+      // No existe el email?
+      if (!user) {
+        return res.status(400).json({ error: "Bad request"});
+      }
+      // // Crear la sesión de un usuario
+      // req.session.user = {
+      //   first_name: req.user.first_name,
+      //   last_name: req.user.last_name,
+      //   email: req.user.email,
+      //   role: req.user.role,
+      // };
+
+
       res.json({ status: "Success", message: "Logged" });
+
     } catch (error) {
       console.log(error);
       res
