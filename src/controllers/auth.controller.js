@@ -1,7 +1,6 @@
 // Controlador de autenticación (Login)
 
 const { useValidPassword } = require("../utils/crypt-password.util");
-
 const { Router } = require("express");
 const Users = require("../models/user.model");
 const passport = require("passport");
@@ -33,7 +32,6 @@ router.post("/login", async (req, res) => {
 
     res.cookie("authToken", token).json({ message: "Logged" });
 
-    // res.json({ status: "Success", message: "Logged", token });
   } catch (error) {
     console.log(error);
     res
@@ -42,32 +40,32 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/fail-login", (req, res) => {
-  res.json({ status: "error", error: "Login failed" });
-});
+// router.get("/fail-login", (req, res) => {
+//   res.json({ status: "error", error: "Login failed" });
+// });
 
-router.get("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.json({ error: err });
-    }
-    res.redirect("/login");
-  });
-});
+// router.get("/logout", (req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       return res.json({ error: err });
+//     }
+//     res.redirect("/login");
+//   });
+// });
 
-router.get(
-  "/github",
-  // Utilizar la estrategia github del passport.config.js
-  passport.authenticate("github", { scope: ["user: email"] }, (req, res) => {})
-);
+// router.get(
+//   "/github",
+//   // Utilizar la estrategia github del passport.config.js
+//   passport.authenticate("github", { scope: ["user: email"] }, (req, res) => {})
+// );
 
-router.get(
-  "/githubcallback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
-  (req, res) => {
-    req.session.user = req.user;
-    res.redirect("/");
-  }
-);
+// router.get(
+//   "/githubcallback",
+//   passport.authenticate("github", { failureRedirect: "/login" }),
+//   (req, res) => {
+//     req.session.user = req.user;
+//     res.redirect("/");
+//   }
+// );
 
 module.exports = router;
