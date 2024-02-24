@@ -1,5 +1,3 @@
-// Realizar una solicitud HTTP POST
-
 const form = document.getElementById("loginForm");
 
 // Si se produce un submit (si se preciona el botón) capturar el evento
