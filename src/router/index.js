@@ -16,7 +16,6 @@ const router = (app) => {
   
   app.use("/", viewsTemplateController);
 
-  // las solicitudes POST a la ruta "/auth" serán manejadas por authController
   app.use("/auth", authController);
   app.use("/users", usersController);
 };

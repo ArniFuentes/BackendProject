@@ -11,8 +11,8 @@ router.get(
   async (req, res) => {
     try {
       const users = await Users.find();
-      console.log(req.user);
       res.json({ message: users });
+
     } catch (error) {
       console.log(error);
     }
@@ -26,6 +26,7 @@ router.post(
     try {
       // Se creó el recurso en la base de datos
       res.status(201).json({ status: "success", message: "registered user" });
+
     } catch (error) {
       console.log(error);
       res.status(500).json({ status: "Error", error: "Internal Server Error" });

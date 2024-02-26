@@ -1,5 +1,4 @@
 const express = require("express");
-const MongoStore = require("connect-mongo");
 const handlebars = require("express-handlebars");
 const router = require("./router/index");
 const mongoConnect = require("./db/index");

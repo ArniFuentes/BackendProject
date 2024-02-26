@@ -1,7 +1,6 @@
 const logoutButton = document.getElementById("logout");
 
 logoutButton.addEventListener("click", (e) => {
-  console.log("logout");
   fetch("/auth/logout")
     .then((response) => response.json())
     .then((data) => {
