@@ -2,12 +2,11 @@ const form = document.getElementById("loginForm");
 
 // Si se produce un submit (si se preciona el botón) capturar el evento
 form.addEventListener("submit", (e) => {
-  // Evita que el formulario realice la acción predeterminada (enviar la solicitud directamente al servidor)
+  // Evitar que al dar clic en el botón se recargue
   e.preventDefault();
 
   // Asignar el array de input con los objetos internos
   const data = new FormData(form);
-  console.log(data);
 
   const obj = {};
 
@@ -16,7 +15,7 @@ form.addEventListener("submit", (e) => {
 
   const fetchParams = {
     url: "/auth/login", //  Ruta a la cual se enviará la solicitud
-    headers: { "Content-type": "application/json" },  // Desde el formulario salir como json
+    headers: { "Content-type": "application/json" }, // Desde el formulario salir como json
     method: "POST",
     body: JSON.stringify(obj),
   };

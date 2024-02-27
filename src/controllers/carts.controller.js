@@ -21,7 +21,7 @@ router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
     const cart = await cartsService.getCartById(cartId);
     const cartProducts = cart.products;
-    res.json({ cartProducts: cartProducts });
+    res.json({ cartProducts });
   } catch (error) {
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)

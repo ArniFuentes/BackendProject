@@ -34,9 +34,4 @@ router.post(
   }
 );
 
-// router.get("/fail-register", (req, res) => {
-//   console.log("Falló registro");
-//   res.status(400).json({ status: "error", error: "Bad request" });
-// });
-
 module.exports = router;

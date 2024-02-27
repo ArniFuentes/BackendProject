@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  age: Number,
   password: String,
+  cart: { type: mongoose.Schema.Types.ObjectId, ref: "cart" },
   role: {
     type: String,
     enum: ["user", "admin", "superAdmin"], // Posibles roles

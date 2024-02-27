@@ -1,6 +1,7 @@
 const Cart = require("../../models/cart.model");
 
 class CartDAOMongo {
+  
   async createCart() {
     try {
       const newCart = await Cart.create({ products: [] });
