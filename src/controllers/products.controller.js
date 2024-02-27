@@ -104,7 +104,6 @@ router.delete("/:pid", async (req, res) => {
     res
       .status(HTTP_RESPONSES.DELETED)
       .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
-    console.log(HTTP_RESPONSES.DELETE_SUCCESS);
   } catch (error) {
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)

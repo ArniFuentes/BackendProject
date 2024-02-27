@@ -86,9 +86,7 @@ router.delete("/:cid", async (req, res) => {
 router.put("/:cid", async (req, res) => {
   try {
     const cartId = req.params.cid;
-    console.log(cartId);
     const newProducts = req.body.products;
-    console.log(newProducts);
 
     // Validar que se proporcionó un arreglo de productos
     if (!newProducts || !Array.isArray(newProducts)) {
@@ -99,7 +97,6 @@ router.put("/:cid", async (req, res) => {
 
     // Obtener el carrito por su ID
     const cart = await cartsService.getCartById(cartId);
-    console.log(cart);
 
     // Actualizar los productos del carrito con el nuevo arreglo
     cart.products = newProducts;
@@ -119,7 +116,6 @@ router.put("/:cid/products/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
     const newQuantity = req.body.quantity;
-    console.log(newQuantity);
 
     if (typeof newQuantity !== "number" || newQuantity <= 0) {
       return res
@@ -128,20 +124,16 @@ router.put("/:cid/products/:pid", async (req, res) => {
     }
 
     const cart = await cartsService.getCartById(cartId);
-    console.log(cart);
 
     // Convertir el productId a un objeto ObjectId para comparar
     const productIdObj = new ObjectId(productId);
-    console.log(productId);
 
     const productIndex = cart.products.findIndex((item) =>
       item._id.equals(productIdObj)
     );
-    console.log(productIndex);
 
     if (productIndex !== -1) {
       const product = cart.products[productIndex];
-      console.log(product);
       product.quantity = newQuantity;
 
       await cartsService.updateCart(cartId, cart);

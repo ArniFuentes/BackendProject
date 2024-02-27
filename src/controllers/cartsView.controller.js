@@ -10,7 +10,6 @@ router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
     const cart = await cartsService.getCartById(cartId);
     const cartProducts = cart.products;
-    console.log(cartProducts);
 
     // Renderizar la vista con los datos del carrito
     res.render("cart.handlebars", { cartProducts });
