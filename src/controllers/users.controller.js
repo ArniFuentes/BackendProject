@@ -1,13 +1,15 @@
 const { Router } = require("express");
 const passport = require("passport");
 const Users = require("../models/user.model");
+const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
 
 const router = Router();
 
 router.get(
   "/",
-  // Endpoint protegido
+  // Endpoint protegido y con autorización
   passport.authenticate("jwt", { session: false }),
+  authRoleMiddleware(["admin", "superAdmin"]),
   async (req, res) => {
     try {
       const users = await Users.find();
