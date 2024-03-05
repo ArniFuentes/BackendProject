@@ -16,6 +16,8 @@ const productSchema = new mongoose.Schema({
   thumbnails: { type: Object, default: [] },
   // Al momento de responder sólo entregar los que tengan status true
   status: { type: Boolean, default: true },
+  createdAt: Date,
+  updatedAt: Date,
 });
 
 // Agregar el plugin de paginación

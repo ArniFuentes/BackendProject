@@ -1,5 +1,3 @@
-// const { useValidPassword } = require("../utils/bcrypt-password.util");
-// const Users = require("../models/user.model");
 const { Router } = require("express");
 const passport = require("passport");
 const generateToken = require("../utils/jwt.util");
@@ -60,34 +58,3 @@ router.get(
 );
 
 module.exports = router;
-
-// router.post("/login", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const user = await Users.findOne({ email });
-
-//     // No existe el email?
-//     if (!user) {
-//       return res.status(400).json({ error: "Bad request" });
-//     }
-
-//     // No es válido el password?
-//     if (!useValidPassword(user, password)) {
-//       return res.status(400).json({ error: "Bad request" });
-//     }
-
-//     const tokenInfo = {
-//       id: user._id,
-//       role: user.role,
-//     };
-
-//     const token = generateToken(tokenInfo);
-
-//     res.cookie("authToken", token).json({ message: "Logged" });
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(500)
-//       .json({ status: "success", message: "Internal Server Error" });
-//   }
-// });

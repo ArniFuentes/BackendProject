@@ -39,10 +39,7 @@ const getOne = async (productId) => {
 const insertOne = async (newProductInfo) => {
   try {
     newProductInfo.createdAt = new Date();
-    newProductInfo.updatedAt = new Date();
-
     const newProduct = await Product.createProduct(newProductInfo);
-
     return newProduct;
   } catch (error) {
     throw error;

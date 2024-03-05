@@ -1,4 +1,3 @@
-// Utilizar mongoose para conectar con MongoDB
 const mongoose = require("mongoose");
 const { dbUser, dbPassword, dbHost, dbName } = require("../configs/config");
 
