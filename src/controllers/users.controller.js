@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const passport = require("passport");
-const Users = require("../models/user.model");
+// const Users = require("../models/user.model");
+const usersService = require("../services/users.service");
 const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
 
 const router = Router();
@@ -12,7 +13,8 @@ router.get(
   authRoleMiddleware(["admin", "superAdmin"]),
   async (req, res) => {
     try {
-      const users = await Users.find();
+      // const users = await Users.find();
+      const users = await usersService.find();
       res.json({ message: users });
     } catch (error) {
       console.log(error);
@@ -27,7 +29,8 @@ router.get(
   async (req, res) => {
     try {
       const { uid } = req.params;
-      const user = await Users.findOne({ _id: uid });
+      // const user = await Users.findOne({ _id: uid });
+      const user = await usersService.getOne(uid);
       res.json({ message: user });
     } catch (error) {
       console.log(error);

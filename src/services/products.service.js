@@ -1,6 +1,5 @@
 // Para manipular MongoDB
 const ProductDAOMongo = require("../DAO/mongo/product-dao.mongo");
-
 const Product = new ProductDAOMongo();
 
 const getAll = async (page, limit, sort, category, available) => {
