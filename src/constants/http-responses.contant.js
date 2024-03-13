@@ -1,9 +1,7 @@
 const HTTP_RESPONSES = {
-  // Se creó exitosamente un producto
-  CREATED: 201,
+  CREATED: 201,  // Se creó exitosamente un producto
   UPDATED: 200,
-  // Se eliminó exitosamente un producto
-  DELETED: 204,
+  DELETED: 204,  // Se eliminó exitosamente un producto
   DELETE_SUCCESS: "Item deleted successfully",
   UPDATE_SUCCESS: "Item updated successfully",
   // Error del cliente

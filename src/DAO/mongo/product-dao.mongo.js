@@ -1,39 +1,68 @@
 const Product = require("../../models/product.model");
 
 class ProductDAO {
-
   async getProducts(page = 1, limit = 10, sortOptions = {}, filterOptions = {}) {
-    const options = {
-      page: page,
-      limit: limit,
-      sort: sortOptions,
-      lean: true, 
-    };
-  
-    const query = filterOptions;
-  
-    const result = await Product.paginate(query, options);
-    return result;
+    try {
+      const options = {
+        page: page,
+        limit: limit,
+        sort: sortOptions,
+        lean: true, 
+      };
+    
+      const query = filterOptions;
+    
+      const result = await Product.paginate(query, options);
+      return result;
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
   
   async getProductById(productId) {
-    // Obtener un producto por su ID utilizando el método findById de mongoose
-    const product = await Product.findById(productId);
-    return product;
+    try {
+      // Obtener un producto por su ID utilizando el método findById de mongoose
+      const product = await Product.findById(productId);
+      return product;
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async createProduct(newProductInfo) {
-    return await Product.create(newProductInfo);
+    try {
+      return await Product.create(newProductInfo);
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async updateProduct(productId, updatedProductInfo) {
-    // Utiliza el método updateOne de Mongoose para actualizar el producto
-    await Product.updateOne({ _id: productId }, { $set: updatedProductInfo });
+    try {
+      // Utiliza el método updateOne de Mongoose para actualizar el producto
+      await Product.updateOne({ _id: productId }, { $set: updatedProductInfo });
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async deleteProduct(productId) {
-    // Utiliza el método deleteOne de Mongoose para eliminar el producto
-    return await Product.deleteOne({ _id: productId });
+    try {
+      // Utiliza el método deleteOne de Mongoose para eliminar el producto
+      return await Product.deleteOne({ _id: productId });
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 

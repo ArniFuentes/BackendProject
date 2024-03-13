@@ -2,18 +2,25 @@ const { Router } = require("express");
 const HTTP_RESPONSES = require("../constants/http-responses.contant");
 const cartsService = require("../services/carts.service");
 const { ObjectId } = require("mongodb");
+const passport = require("passport");
+const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
 
 const router = Router();
 
-// Crear un nuevo carrito (sin obtener nada del cliente)
-router.post("/", async (req, res) => {
-  try {
-    const newCart = await cartsService.insertOne();
-    res.status(HTTP_RESPONSES.CREATED).json({ cart: newCart });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+// Crear un nuevo carrito
+router.post(
+  "/",
+  passport.authenticate("current", { session: false }),
+  async (req, res) => {
+    try {
+      const userId = req.user.id; // Obtener el ID del usuario autenticado
+      const newCart = await cartsService.insertOne(userId); // Pasar el ID del usuario al servicio
+      res.status(HTTP_RESPONSES.CREATED).json({ cart: newCart });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
-});
+);
 
 // Mostrar los productos del carrito
 router.get("/:cid", async (req, res) => {
@@ -30,22 +37,40 @@ router.get("/:cid", async (req, res) => {
 });
 
 // Agregar un producto a un determinado carrito
-router.post("/:cid/product/:pid", async (req, res) => {
-  try {
-    const cartId = req.params.cid;
-    const productId = req.params.pid;
+router.post(
+  "/:cid/product/:pid",
+  // Autorizar
+  passport.authenticate("current", { session: false }),
+  // Sólo para usuarios
+  authRoleMiddleware(["user"]),
+  async (req, res) => {
+    try {
+      const cartId = req.params.cid;
+      const productId = req.params.pid;
+      const userId = req.user.id; // Obtener el ID del usuario autenticado
 
-    await cartsService.addProductToCart(cartId, productId);
+      // Obtener el carrito por su ID
+      const cart = await cartsService.getCartById(cartId);
 
-    res
-      .status(HTTP_RESPONSES.CREATED)
-      .json({ message: "Producto agregado al carrito exitosamente." });
-  } catch (error) {
-    res
-      .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error });
+       // Verificar si el usuario es el propietario del carrito
+       if (cart.user.toString() !== userId.toString()) {
+        // Si el usuario no es el propietario del carrito, devolver un error de permiso
+        return res.status(403).json({ error: "No tienes permiso para agregar productos a este carrito." });
+      }
+
+      // Si el usuario es el propietario del carrito, agregar el producto al carrito
+      await cartsService.addProductToCart(cartId, productId);
+
+      res
+        .status(HTTP_RESPONSES.CREATED)
+        .json({ message: "Producto agregado al carrito exitosamente." });
+    } catch (error) {
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ status: "error", error });
+    }
   }
-});
+);
 
 // Eliminar un producto de un determinado carrito
 router.delete("/:cid/products/:pid", async (req, res) => {
@@ -150,4 +175,4 @@ router.put("/:cid/products/:pid", async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

@@ -2,11 +2,21 @@ const Users = require("../../models/user.model");
 
 class UserDAO {
   async find() {
-    return await Users.find();
+    try {
+      return await Users.find();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async findOne(id) {
-    return await Users.findOne({ _id: id });
+    try {
+      return await Users.findOne({ _id: id });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 

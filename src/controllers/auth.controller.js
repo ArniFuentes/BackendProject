@@ -17,11 +17,11 @@ router.post(
         role: user.role,
       };
       const token = generateToken(tokenInfo);
+
       // Enviar el token en una cookie
       res
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
-
     } catch (error) {
       console.log(error);
       res
@@ -47,12 +47,9 @@ router.get(
       res
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
-
     } catch (error) {
       console.log(error);
-      res
-        .status(500)
-        .json({ message: "Internal Server Error" });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 );

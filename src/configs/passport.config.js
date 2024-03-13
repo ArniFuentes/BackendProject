@@ -15,9 +15,8 @@ const ExtractJwt = jwt.ExtractJwt;
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
-  // Capturar cualquier request que se realice
   passport.use(
-    "jwt",
+    "current",
     new JwtStrategy(
       // Primer argumento
       {
@@ -70,24 +69,30 @@ const initializePassport = () => {
     )
   );
 
+  // Estrategia local para el inicio de sesión
   passport.use(
     "login",
     new LocalStrategy(
-      { usernameField: "email" },
+      // Configuración para buscar el nombre de usuario en el campo de correo electrónico
+      { usernameField: "email", passwordField: "password" },
+      // Toma el correo electrónico y la contraseña proporcionados por el usuario.
       async (username, password, done) => {
         try {
+          // Buscar el usuario en la base de datos utilizando el correo electrónico
           const user = await Users.findOne({ email: username });
-
+        
           if (!user) {
             console.log("Usuario no existe");
-            return done(null, false); // No enviar el usuario (False)
+            return done(null, false);
           }
 
           if (!useValidPassword(user, password)) {
             console.log("Password no hace match");
+            //  no hubo errores durante la autenticación (null) y no se encontró ningún usuario autenticado (false)
             done(null, false);
           }
-          // Si la autenticación es exitosa añadir user a req.user
+
+          // Si la autenticación es exitosa, pasar los datos del usuario autenticado como segundo argumento
           return done(null, user);
         } catch (error) {
           done(error);

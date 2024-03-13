@@ -1,11 +1,11 @@
-// Para manipular MongoDB
 const CartDAOMongo = require("../DAO/mongo/cart-dao.mongo");
 
 const Cart = new CartDAOMongo();
 
-const insertOne = async () => {
+const insertOne = async (userId) => {
   try {
-    const newCart = await Cart.createCart();
+    // Crear un nuevo carrito y asociarlo al usuario
+    const newCart = await Cart.createCart(userId);
     return newCart;
   } catch (error) {
     throw error;

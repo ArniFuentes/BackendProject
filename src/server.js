@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true })); // Datos del formulario a objet
 // configura el middleware express.static para servir archivos estáticos desde "public" dentro de "src"
 app.use(express.static(process.cwd() + "/src/public")); // Buscar el /js/chat.js en la carpeta public
 
+// Ejecutar las configuraciones
 initializePassport();
 app.use(passport.initialize());
 

@@ -1,10 +1,9 @@
 const Cart = require("../../models/cart.model");
 
 class CartDAOMongo {
-  
-  async createCart() {
+  async createCart(userId) {
     try {
-      const newCart = await Cart.create({ products: [] });
+      const newCart = await Cart.create({ products: [], user: userId });
       return newCart;
     } catch (error) {
       console.error("Error en createCart:", error);
@@ -14,7 +13,9 @@ class CartDAOMongo {
 
   async getCartById(cartId) {
     try {
-      const cart = await Cart.findById(cartId).populate("products.product").lean();
+      const cart = await Cart.findById(cartId)
+        .populate("products.product")
+        .lean();
       return cart;
     } catch (error) {
       console.error("Error en getCartById:", error);
