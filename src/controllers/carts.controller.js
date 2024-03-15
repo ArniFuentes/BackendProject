@@ -52,10 +52,12 @@ router.post(
       // Obtener el carrito por su ID
       const cart = await cartsService.getCartById(cartId);
 
-       // Verificar si el usuario es el propietario del carrito
-       if (cart.user.toString() !== userId.toString()) {
+      // Verificar si el usuario es el propietario del carrito
+      if (cart.user.toString() !== userId.toString()) {
         // Si el usuario no es el propietario del carrito, devolver un error de permiso
-        return res.status(403).json({ error: "No tienes permiso para agregar productos a este carrito." });
+        return res.status(403).json({
+          error: "No tienes permiso para agregar productos a este carrito.",
+        });
       }
 
       // Si el usuario es el propietario del carrito, agregar el producto al carrito
@@ -174,5 +176,21 @@ router.put("/:cid/products/:pid", async (req, res) => {
       .json({ status: "error", error });
   }
 });
+
+router.post(
+  "/:cid/purchase",
+  passport.authenticate("current", { session: false }),
+  async (req, res) => {
+    // identificar el carrito que se está comprando
+    const cartId = req.params.cid;
+
+    try {
+      const result = await cartsService.purchaseCart(cartId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(HTTP_RESPONSES.BAD_REQUEST).json({ error: error.message });
+    }
+  }
+);
 
 module.exports = router;
