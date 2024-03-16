@@ -105,7 +105,25 @@ const getUserName = async () => {
       input: "text",
       icon: "success",
     });
-    console.log(userName.value);
+
+    socket.emit("newUser", { userName: userName.value });
+
+    socket.on("userConnected", (user) => {
+      Swal.fire({
+        text: `Se acaba de conectar ${user.userName}`,
+      });
+    });
+
+    chatBox.addEventListener("keyup", (e) => {
+      // El evento es un enter?
+      if (e.key === "Enter") {
+        // Data ingresada al cuadro
+        const data = { userName: userName.value, message: chatBox.value };
+        chatBox.value = "";
+        // Apenas se precione enter se debe emitir un evento y enviar al servidor
+        socket.emit("message", data);
+      }
+    });
   } catch (error) {
     console.log(error);
   }
@@ -113,20 +131,11 @@ const getUserName = async () => {
 
 getUserName();
 
-chatBox.addEventListener("keyup", (e) => {
-  // El evento es un enter?
-  if (e.key === "Enter") {
-    // Data ingresada al cuadro
-    const data = chatBox.value;
-    chatBox.value = "";
-    // Apenas se precione enter se debe emitir un evento y enviar al servidor
-    socket.emit("message", data);
-  }
-});
-
-socket.on("messageLogs", (data) => {
+socket.on("messageLogs", (chats) => {
   let messages = "";
-  data.forEach((message) => (messages += `${message} <br>`));
+  chats.forEach(
+    (chat) => (messages += `${chat.userName} dice: ${chat.message} <br>`)
+  );
 
-  messageLogs.innerHTML = data;
+  messageLogs.innerHTML = messages;
 });
