@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const passport = require("passport");
 const generateToken = require("../utils/jwt.util");
+const { emailUser } = require("../configs/config");
+const transport = require("../utils/nodemailer.util");
 
 const router = Router();
 
@@ -40,10 +42,27 @@ router.get(
   "/githubcallback",
   passport.authenticate("github", { session: false }),
   // Si es exitoso
-  (req, res) => {
+  async (req, res) => {
     try {
-      const user = JSON.stringify(req.user);
-      const token = generateToken(user);
+      const user = req.user;
+
+      // Enviar el correo electrónico
+      const mailOptions = {
+        from: emailUser, 
+        to: user.email, 
+        subject: "Registro exitoso!!",
+        html: "<h1>¡Gracias por registrarte!</h1>",
+      };
+
+      await transport.sendMail(mailOptions);
+
+      const tokenInfo = {
+        id: user._id,
+        role: user.role,
+      };
+      const token = generateToken(tokenInfo);
+
+      // Enviar el token en una cookie
       res
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
@@ -53,5 +72,24 @@ router.get(
     }
   }
 );
+
+// router.get(
+//   "/githubcallback",
+//   passport.authenticate("github", { session: false }),
+//   // Si es exitoso
+//   (req, res) => {
+//     try {
+//       const user = JSON.stringify(req.user);
+//       const token = generateToken(user);
+//       res
+//         .cookie("authToken", token, { httpOnly: true })
+//         .json({ message: "Logged" });
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).json({ message: "Internal Server Error" });
+//     }
+//   }
+// );
+
 
 module.exports = router;

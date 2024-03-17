@@ -2,6 +2,8 @@ const { Router } = require("express");
 const passport = require("passport");
 const usersService = require("../services/users.service");
 const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
+const transport = require("../utils/nodemailer.util");
+const { emailUser } = require("../configs/config");
 
 const router = Router();
 
@@ -44,6 +46,16 @@ router.post(
     try {
       // Se creó el recurso en la base de datos
       res.status(201).json({ status: "success", message: "registered user" });
+
+      // Enviar el correo electrónico
+      const mailOptions = {
+        from: emailUser,
+        to: req.body.email, // Tomar el correo del usuario registrado
+        subject: "Registro exitoso!!",
+        html: "<h1>¡Gracias por registrarte!</h1>",
+      };
+
+      await transport.sendMail(mailOptions);
     } catch (error) {
       console.log(error);
       res.status(500).json({ status: "Error", error: "Internal Server Error" });
