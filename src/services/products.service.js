@@ -1,6 +1,6 @@
-// Para manipular MongoDB
-const ProductDAOMongo = require("../DAO/mongo/product-dao.mongo");
-const Product = new ProductDAOMongo();
+const ProductRepository = require("../repositories/product.repository");
+
+const productRepository = new ProductRepository();
 
 const getAll = async (page, limit, sort, category, available) => {
   try {
@@ -17,7 +17,7 @@ const getAll = async (page, limit, sort, category, available) => {
       filterOptions.status = available;
     }
 
-    const products = await Product.getProducts(page, limit, sortOptions, filterOptions);
+    const products = await productRepository.getProducts(page, limit, sortOptions, filterOptions);
     return products;
   } catch (error) {
     throw error;
@@ -27,7 +27,7 @@ const getAll = async (page, limit, sort, category, available) => {
 const getOne = async (productId) => {
   try {
     // Llamar al nuevo método getProductById de la clase ProductDAOMongo
-    const product = await Product.getProductById(productId);
+    const product = await productRepository.getProductById(productId);
     return product;
   } catch (error) {
     // Lanzar cualquier error que ocurra durante el proceso.
@@ -38,7 +38,7 @@ const getOne = async (productId) => {
 const insertOne = async (newProductInfo) => {
   try {
     newProductInfo.createdAt = new Date();
-    const newProduct = await Product.createProduct(newProductInfo);
+    const newProduct = await productRepository.createProduct(newProductInfo);
     return newProduct;
   } catch (error) {
     throw error;
@@ -48,7 +48,7 @@ const insertOne = async (newProductInfo) => {
 const updateOne = async (productId, updatedProductInfo) => {
   try {
     updatedProductInfo.updatedAt = new Date();
-    await Product.updateProduct(productId, updatedProductInfo);
+    await productRepository.updateProduct(productId, updatedProductInfo);
   } catch (error) {
     throw error;
   }
@@ -56,7 +56,7 @@ const updateOne = async (productId, updatedProductInfo) => {
 
 const deleteOne = async (productId) => {
   try {
-    await Product.deleteProduct(productId);
+    await productRepository.deleteProduct(productId);
   } catch (error) {
     throw error;
   }

@@ -1,18 +1,18 @@
 const { v4: uuidv4 } = require("uuid");
-const CartDAOMongo = require("../DAO/mongo/cart-dao.mongo");
-const ProductDAOMongo = require("../DAO/mongo/product-dao.mongo");
-const TicketDAOMongo = require("../DAO/mongo/ticket-dao.mongo");
-const UserDAOMongo = require("../DAO/mongo/user-dao.mongo");
+const CartRepository = require("../repositories/cart.repository");
+const ProductRepository = require("../repositories/product.repository");
+const TicketRepository = require("../repositories/ticket.repository");
+const UserRepository = require("../repositories/users.repository");
 
-const Cart = new CartDAOMongo();
-const Product = new ProductDAOMongo();
-const Ticket = new TicketDAOMongo();
-const User = new UserDAOMongo();
+const cartRepository = new CartRepository();
+const productRepository = new ProductRepository();
+const ticketRepository = new TicketRepository();
+const userRepository = new UserRepository();
 
 const insertOne = async (userId) => {
   try {
     // Crear un nuevo carrito y asociarlo al usuario
-    const newCart = await Cart.createCart(userId);
+    const newCart = await cartRepository.createCart(userId);
     return newCart;
   } catch (error) {
     throw error;
@@ -22,7 +22,7 @@ const insertOne = async (userId) => {
 // Función para obtener un carrito por su ID
 const getCartById = async (cartId) => {
   try {
-    const cart = await Cart.getCartById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
     if (!cart) {
       throw new Error("El carrito no fue encontrado");
     }
@@ -35,7 +35,7 @@ const getCartById = async (cartId) => {
 const addProductToCart = async (cartId, productId) => {
   try {
     // Obtener el carrito por su ID
-    const cart = await Cart.getCartById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
 
     // Verificar si el producto (el id) ya está en el carrito
     const existingProduct = cart.products.find(
@@ -51,7 +51,7 @@ const addProductToCart = async (cartId, productId) => {
     }
 
     // Guardar el carrito actualizado en la base de datos
-    await Cart.updateCart(cartId, cart);
+    await cartRepository.updateCart(cartId, cart);
 
     return cart;
   } catch (error) {
@@ -62,7 +62,7 @@ const addProductToCart = async (cartId, productId) => {
 const removeProductFromCart = async (cartId, productId) => {
   try {
     // Obtener el carrito por su ID
-    const cart = await Cart.getCartById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
 
     // Filtrar los productos para excluir el producto que se va a eliminar
     cart.products = cart.products.filter(
@@ -71,7 +71,7 @@ const removeProductFromCart = async (cartId, productId) => {
     console.log(cart.products);
 
     // Guardar el carrito actualizado en la base de datos
-    await Cart.updateCart(cartId, cart);
+    await cartRepository.updateCart(cartId, cart);
 
     return cart;
   } catch (error) {
@@ -83,13 +83,13 @@ const removeProductFromCart = async (cartId, productId) => {
 const removeAllProductsFromCart = async (cartId) => {
   try {
     // Obtener el carrito por su ID
-    const cart = await Cart.getCartById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
 
     // Eliminar todos los productos del carrito
     cart.products = [];
 
     // Guardar el carrito actualizado en la base de datos
-    await Cart.updateCart(cartId, cart);
+    await cartRepository.updateCart(cartId, cart);
     return cart;
   } catch (error) {
     throw error;
@@ -99,7 +99,7 @@ const removeAllProductsFromCart = async (cartId) => {
 // Función para actualizar el carrito en la base de datos
 const updateCart = async (cartId, updatedCart) => {
   try {
-    const result = await Cart.updateCart(cartId, updatedCart);
+    const result = await cartRepository.updateCart(cartId, updatedCart);
     return result;
   } catch (error) {
     throw error;
@@ -123,7 +123,7 @@ const calculateTotalAmount = (products) => {
 const getUserEmail = async (userId) => {
   try {
     // Buscar el usuario por su ID en la base de datos
-    const user = await User.findOne(userId);
+    const user = await userRepository.getOne(userId);
 
     // Devolver el correo electrónico del usuario
     return user.email;
@@ -134,7 +134,7 @@ const getUserEmail = async (userId) => {
 
 const purchaseCart = async (cartId) => {
   try {
-    const cart = await Cart.getCartById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
 
     // Inicializa un arreglo para almacenar los productos no procesados
     const unprocessedProducts = [];
@@ -142,7 +142,7 @@ const purchaseCart = async (cartId) => {
     // Revisar cada producto del array de productos
     for (const item of cart.products) {
       // Producto a verificar
-      const product = await Product.getProductById(item.product._id);
+      const product = await productRepository.getProductById(item.product._id);
 
       if (product.stock < 1) {
         // Si no hay suficiente stock, agrega el producto a la lista de productos no procesados
@@ -150,7 +150,7 @@ const purchaseCart = async (cartId) => {
       } else {
         // Restar el stock del producto
         product.stock -= 1;
-        await Product.updateProduct(product._id, product);
+        await productRepository.updateProduct(product._id, product);
       }
     }
 
@@ -165,14 +165,14 @@ const purchaseCart = async (cartId) => {
       amount: calculateTotalAmount(purchasedProducts),
       purchaser: await getUserEmail(cart.user),
     };
-    const newTicket = await Ticket.createTicket(ticketData);
+    const newTicket = await ticketRepository.createTicket(ticketData);
 
     // Actualizar el carrito para contener solo los productos no procesados
     cart.products = cart.products.filter(
       // Ejecutar para cada elemento del array, y si es true incluir en el nuevo array
       (item) => unprocessedProducts.includes(item.product._id)
     );
-    await Cart.updateCart(cartId, cart);
+    await cartRepository.updateCart(cartId, cart);
 
     return { message: "Purchase completed successfully", ticket: newTicket };
   } catch (error) {

@@ -10,8 +10,6 @@ class TicketDAOMongo {
       throw error;
     }
   }
-
-  // Otros métodos de acceso a datos para tickets podrían ser implementados aquí
 }
 
 module.exports = TicketDAOMongo;

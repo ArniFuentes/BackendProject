@@ -1,10 +1,12 @@
-const UserDAOMongo = require("../DAO/mongo/user-dao.mongo");
+// Utilizar el UserRepository en lugar del UserDAO directamente
 
-const User = new UserDAOMongo();
+const UserRepository = require("../repositories/users.repository");
+
+const userRepository = new UserRepository();
 
 const getAll = async () => {
   try {
-    return await User.find();
+    return await userRepository.getAll();
   } catch (error) {
     throw error;
   }
@@ -12,7 +14,7 @@ const getAll = async () => {
 
 const getOne = async (id) => {
   try {
-    return await User.findOne(id);
+    return await userRepository.getOne(id);
   } catch (error) {
     throw error;
   }
