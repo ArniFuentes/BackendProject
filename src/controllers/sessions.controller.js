@@ -10,7 +10,7 @@ router.get(
   (req, res) => {
     try {
       const currentUserDTO = new CurrentUserDTO(req.user);
-      res.json(currentUserDTO);
+      res.json({ user: currentUserDTO });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Internal Server Error" });
