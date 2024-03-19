@@ -1,4 +1,5 @@
 const HTTP_RESPONSES = {
+  SUCCESS: 200,
   CREATED: 201,  // Se creó exitosamente un producto
   UPDATED: 200,
   DELETED: 204,  // Se eliminó exitosamente un producto

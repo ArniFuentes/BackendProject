@@ -8,6 +8,7 @@ const cartSchema = new mongoose.Schema({
   products: [
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+      quantity: { type: Number, default: 1 },
     },
   ],
   // Referencia al usuario al que pertenece el carrito

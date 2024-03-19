@@ -1,13 +1,66 @@
+//  Lógica de negocio
+
 const { v4: uuidv4 } = require("uuid");
 const CartRepository = require("../repositories/cart.repository");
 const ProductRepository = require("../repositories/product.repository");
 const TicketRepository = require("../repositories/ticket.repository");
 const UserRepository = require("../repositories/users.repository");
+const { ObjectId } = require("mongodb");
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
 const ticketRepository = new TicketRepository();
 const userRepository = new UserRepository();
+
+//  Manejar la lógica de agregar un producto al carrito solo si no existe
+const addProductToCartIfNotExists = async (cartId, productId, userId) => {
+  const cart = await getCartById(cartId);
+
+  // Verificar si el usuario es el propietario del carrito
+  if (cart.user.toString() !== userId.toString()) {
+    throw new Error("No tienes permiso para agregar productos a este carrito.");
+  }
+
+  // Verificar si el producto ya está en el carrito
+  const productIndex = cart.products.findIndex(
+    (item) => item.product._id.toString() === productId
+  );
+
+  // Si el producto ya está en el carrito, incrementar la cantidad
+  if (productIndex !== -1) {
+    cart.products[productIndex].quantity++;
+    // Guardar el carrito actualizado en la base de datos
+    await updateCart(cartId, cart);
+  } else {
+    // Si el producto no está en el carrito, agregarlo (por defecto quantity es un 1)
+    await addProductToCart(cartId, productId);
+  }
+};
+
+// Lógica de validación y búsqueda del producto en el carrito
+const updateProductQuantityInCart = async (cartId, productId, newQuantity) => {
+  try {
+    const cart = await getCartById(cartId);
+
+    // Convertir el productId a un objeto ObjectId para comparar
+    const productIdObj = new ObjectId(productId);
+
+    // Encontrar el índice del producto dentro del carrito
+    const productIndex = cart.products.findIndex((item) =>
+      item.product._id.equals(productIdObj)
+    );
+
+    if (productIndex !== -1) {
+      const product = cart.products[productIndex];
+      product.quantity = newQuantity;
+      await updateCart(cartId, cart);
+    } else {
+      throw new Error("Producto no encontrado en el carrito");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
 const insertOne = async (userId) => {
   try {
@@ -111,8 +164,8 @@ const calculateTotalAmount = (products) => {
   try {
     // Iterar sobre el array de productos que se pueden comprar (stock > 0)
     for (const item of products) {
-      // Sumar el precio del producto al total
-      total += item.product.price;
+      // Multiplicar el precio del producto por su cantidad y sumarlo al total
+      total += item.product.price * item.quantity;
     }
     return total;
   } catch (error) {
@@ -139,27 +192,27 @@ const purchaseCart = async (cartId) => {
     // Inicializa un arreglo para almacenar los productos no procesados
     const unprocessedProducts = [];
 
-    // Revisar cada producto del array de productos
+    // Inicializa un arreglo para almacenar los productos comprados
+    const purchasedProducts = [];
+
+    // Revisar cada producto del carrito
     for (const item of cart.products) {
       // Producto a verificar
       const product = await productRepository.getProductById(item.product._id);
 
-      if (product.stock < 1) {
-        // Si no hay suficiente stock, agrega el producto a la lista de productos no procesados
+      // Si no hay suficiente stock, agregar el producto a la lista de productos no procesados
+      if (product.stock < item.quantity) {
         unprocessedProducts.push(item.product._id);
       } else {
-        // Restar el stock del producto
-        product.stock -= 1;
+        // Si hay suficiente stock, restar el stock del producto
+        product.stock -= item.quantity;
         await productRepository.updateProduct(product._id, product);
+        // Agregar el producto a la lista de productos comprados
+        purchasedProducts.push(item);
       }
     }
 
-    purchasedProducts = cart.products.filter(
-      // Ejecutar para cada elemento del array, y si es true incluir en el nuevo array
-      (item) => !unprocessedProducts.includes(item.product._id)
-    );
-
-    // Crear un ticket para la compra
+    // Crear un ticket para los productos comprados
     const ticketData = {
       code: uuidv4(),
       amount: calculateTotalAmount(purchasedProducts),
@@ -174,7 +227,21 @@ const purchaseCart = async (cartId) => {
     );
     await cartRepository.updateCart(cartId, cart);
 
-    return { message: "Purchase completed successfully", ticket: newTicket };
+    // Si hay productos no procesados, devolver sus IDs junto con el mensaje de compra incompleta
+    if (unprocessedProducts.length > 0) {
+      return {
+        message: "Purchase incomplete",
+        purchasedProducts: purchasedProducts,
+        unprocessedProducts,
+        ticket: newTicket,
+      };
+    }
+
+    // Si todos los productos se compraron correctamente, devolver el mensaje de compra exitosa y el ticket generado
+    return {
+      message: "Purchase completed successfully",
+      ticket: newTicket,
+    };
   } catch (error) {
     throw error;
   }
@@ -188,4 +255,6 @@ module.exports = {
   removeAllProductsFromCart,
   updateCart,
   purchaseCart,
+  updateProductQuantityInCart,
+  addProductToCartIfNotExists,
 };
