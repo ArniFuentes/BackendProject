@@ -6,6 +6,8 @@ const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
 const CartDTO = require("../DTOs/cart.dto");
 const CartValidatorDTO = require("../DTOs/cart-validator.dto");
 const CartQuantityValidatorDTO = require("../DTOs/cart-quantity-validator.dto");
+const CustomError = require("../handlers/errors/customError");
+const errorDictionary = require("../handlers/errors/error-diccionary");
 
 const router = Router();
 
@@ -39,26 +41,56 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
+// // Agregar un producto a un determinado carrito
+// router.post(
+//   "/:cid/product/:pid",
+//   passport.authenticate("current", { session: false }),
+//   authRoleMiddleware(["user"]),
+//   async (req, res) => {
+//     try {
+//       const cartId = req.params.cid;
+//       const productId = req.params.pid;
+//       const userId = req.user.id;
+
+//       await cartsService.addProductToCartIfNotExists(cartId, productId, userId);
+
+//       res
+//         .status(HTTP_RESPONSES.CREATED)
+//         .json({ message: "Producto agregado al carrito exitosamente." });
+//     } catch (error) {
+//       res
+//         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+//         .json({ status: "error", error });
+//     }
+//   }
+// );
 // Agregar un producto a un determinado carrito
 router.post(
   "/:cid/product/:pid",
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["user"]),
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
       const userId = req.user.id;
 
+      // Validación de longitud (los id en mongo tiene 24 elementos)
+      if (cartId.length !== 24 || productId.length !== 24) {
+        CustomError.createError({
+          name: "ValidationError",
+          message: "Parameter length is invalid",
+          code: errorDictionary.VALIDATION_ERROR,
+        });
+      }
+
       await cartsService.addProductToCartIfNotExists(cartId, productId, userId);
-      
+
       res
         .status(HTTP_RESPONSES.CREATED)
         .json({ message: "Producto agregado al carrito exitosamente." });
     } catch (error) {
-      res
-        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-        .json({ status: "error", error });
+      next(error); // Pasa el error al middleware de manejo de errores
     }
   }
 );
@@ -102,7 +134,7 @@ router.delete("/:cid", async (req, res) => {
 router.put("/:cid", async (req, res) => {
   try {
     const cartId = req.params.cid;
-    
+
     // Utilizar el DTO para estructurar y validar los datos del cuerpo de la solicitud
     const cartValidatorDTO = new CartValidatorDTO(req.body);
 
@@ -135,7 +167,11 @@ router.put("/:cid/products/:pid", async (req, res) => {
     const newQuantity = cartQuantityValidatorDTO.quantity;
 
     // Llamar al servicio para validar y actualizar la cantidad del producto en el carrito
-    await cartsService.updateProductQuantityInCart(cartId, productId, newQuantity);
+    await cartsService.updateProductQuantityInCart(
+      cartId,
+      productId,
+      newQuantity
+    );
 
     res
       .status(HTTP_RESPONSES.SUCCESS)
@@ -146,7 +182,6 @@ router.put("/:cid/products/:pid", async (req, res) => {
       .json({ status: "error", error: error.message });
   }
 });
-
 
 router.post(
   "/:cid/purchase",

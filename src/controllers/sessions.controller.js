@@ -4,6 +4,7 @@ const CurrentUserDTO = require("../DTOs/current-user.dto");
 
 const router = Router();
 
+// Enviar la información del usuario que que está autenticado
 router.get(
   "/current",
   passport.authenticate("current", { session: false }),

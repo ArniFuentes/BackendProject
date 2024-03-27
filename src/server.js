@@ -5,6 +5,7 @@ const mongoConnect = require("./db/index");
 const initializePassport = require("./configs/passport.config");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
+const errorMiddleware = require("./middlewares/errors/index");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.set("views", process.cwd() + "/src/views"); // Ruta de las plantillas
 app.use(express.urlencoded({ extended: true })); // Para pasar a objeto lo que venga de formulario
 
 router(app);
+app.use(errorMiddleware);
 
 mongoConnect();
 

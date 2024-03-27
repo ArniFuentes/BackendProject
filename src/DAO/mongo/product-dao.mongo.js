@@ -29,7 +29,7 @@ class ProductDAO {
       
     } catch (error) {
       console.log(error);
-      throw error;
+      // throw error;
     }
   }
 
@@ -61,7 +61,7 @@ class ProductDAO {
       
     } catch (error) {
       console.log(error);
-      throw error;
+      // throw error;
     }
   }
 }

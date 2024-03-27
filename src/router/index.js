@@ -7,6 +7,7 @@ const viewsTemplateController = require("../controllers/views-template.controlle
 const usersController = require("../controllers/users.controller");
 const chatsController = require("../controllers/chats.controller");
 const sessionsController = require("../controllers/sessions.controller");
+const mockingController  = require("../controllers/mocking.controller");
 
 const router = (app) => {
   app.use("/api/products", productsController);
@@ -18,6 +19,8 @@ const router = (app) => {
   app.use("/", viewsTemplateController);
   app.use("/auth", authController);
   app.use("/users", usersController);
+  app.use("/mockingproducts", mockingController);
+
 };
 
 module.exports = router;
