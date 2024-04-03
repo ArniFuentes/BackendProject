@@ -14,7 +14,7 @@ router.get("/:cid", async (req, res) => {
     // Renderizar la vista con los datos del carrito
     res.render("cart.handlebars", { cartProducts });
   } catch (error) {
-    console.error(error);
+    req.logger.error(error);
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
       .json({ status: "error", error });

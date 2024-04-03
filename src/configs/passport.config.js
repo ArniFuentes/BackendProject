@@ -46,7 +46,6 @@ const initializePassport = () => {
           const user = await Users.findOne({ email: username });
           // Si existe el usuario
           if (user) {
-            console.log("User exists");
             return done(null, false); // Rompe la ejecución
           }
 
@@ -60,7 +59,6 @@ const initializePassport = () => {
 
           // Crear el usuario en mongo
           const newUser = await Users.create(newUserInfo);
-          console.log(newUser);
           return done(null, newUser);
         } catch (error) {
           return done(error);
@@ -82,12 +80,12 @@ const initializePassport = () => {
           const user = await Users.findOne({ email: username });
         
           if (!user) {
-            console.log("Usuario no existe");
+            // console.log("Usuario no existe");
             return done(null, false);
           }
 
           if (!useValidPassword(user, password)) {
-            console.log("Password no hace match");
+            // console.log("Password no hace match");
             //  no hubo errores durante la autenticación (null) y no se encontró ningún usuario autenticado (false)
             done(null, false);
           }
@@ -131,7 +129,6 @@ const initializePassport = () => {
           return done(null, user);
 
         } catch (error) {
-          console.log(error);
           done(error);
         }
       }

@@ -28,7 +28,7 @@ router.post(
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res
         .status(500)
         .json({ status: "success", message: "Internal Server Error" });
@@ -70,7 +70,7 @@ router.get(
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
@@ -88,7 +88,7 @@ router.get(
 //         .cookie("authToken", token, { httpOnly: true })
 //         .json({ message: "Logged" });
 //     } catch (error) {
-//       console.log(error);
+//       req.logger.error(error);
 //       res.status(500).json({ message: "Internal Server Error" });
 //     }
 //   }

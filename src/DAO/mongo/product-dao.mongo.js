@@ -16,7 +16,6 @@ class ProductDAO {
       return result;
       
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -28,7 +27,6 @@ class ProductDAO {
       return product;
       
     } catch (error) {
-      console.log(error);
       // throw error;
     }
   }
@@ -38,7 +36,6 @@ class ProductDAO {
       return await Product.create(newProductInfo);
       
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -49,7 +46,6 @@ class ProductDAO {
       await Product.updateOne({ _id: productId }, { $set: updatedProductInfo });
       
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -60,7 +56,6 @@ class ProductDAO {
       return await Product.deleteOne({ _id: productId });
       
     } catch (error) {
-      console.log(error);
       // throw error;
     }
   }

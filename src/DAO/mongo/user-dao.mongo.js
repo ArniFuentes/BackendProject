@@ -5,7 +5,6 @@ class UserDAO {
     try {
       return await Users.find();
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -14,7 +13,6 @@ class UserDAO {
     try {
       return await Users.findOne({ _id: id });
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

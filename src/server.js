@@ -6,11 +6,13 @@ const initializePassport = require("./configs/passport.config");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middlewares/errors/index");
+const logger = require("./middlewares/logger.midleware");
 
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());  // para obtener las cookies
+app.use(cookieParser()); // para obtener las cookies
+app.use(logger);
 
 app.use(express.urlencoded({ extended: true })); // Datos del formulario a objeto
 

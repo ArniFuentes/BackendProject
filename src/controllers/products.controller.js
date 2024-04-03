@@ -30,6 +30,7 @@ router.get("/", async (req, res) => {
     );
     res.json({ status: "success", payload: products });
   } catch (error) {
+    req.logger.error("Error al obtener productos:", error);
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
       .json({ status: "error", error: error });
@@ -45,6 +46,7 @@ router.get("/:pid", async (req, res) => {
     const product = await productsService.getOne(productId);
     res.json({ status: "success", payload: product });
   } catch (error) {
+    req.logger.error("Error al obtener productos:", error);  // Registrar error en caso de excepción
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
       .json({ status: "error", error });
@@ -191,6 +193,7 @@ router.delete(
         .status(HTTP_RESPONSES.DELETED)
         .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
     } catch (error) {
+      req.logger.error("Error al crear un producto:", error);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ status: "error", error });

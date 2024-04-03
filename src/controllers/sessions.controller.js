@@ -13,7 +13,7 @@ router.get(
       const currentUserDTO = new CurrentUserDTO(req.user);
       res.json({ user: currentUserDTO });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
@@ -36,7 +36,7 @@ module.exports = router;
 //       // En este punto, el usuario actual está autenticado y disponible en req.user
 //       res.json(req.user); // Devuelve el usuario actual en una respuesta JSON
 //     } catch (error) {
-//       console.log(error);
+//       req.logger.error(error);
 //     }
 //   }
 // );

@@ -1,10 +1,11 @@
+const getLogger = require("./utils/winston/factory");
 const app = require("./server");
 const { Server } = require("socket.io");
 
 const chats = [];
 
 const httpServer = app.listen(8080, () => {
-  console.log("Server running at http://localhost:8080/");
+  getLogger.info("Server running at http://localhost:8080/");
 });
 
 // asignar el servidor de socket a io

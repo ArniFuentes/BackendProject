@@ -17,7 +17,7 @@ router.get(
       const users = await usersService.getAll();
       res.json({ message: users });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
     }
   }
 );
@@ -33,7 +33,7 @@ router.get(
       const user = await usersService.getOne(uid);
       res.json({ message: user });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res.json({ error });
     }
   }
@@ -57,7 +57,7 @@ router.post(
 
       await transport.sendMail(mailOptions);
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res.status(500).json({ status: "Error", error: "Internal Server Error" });
     }
   }

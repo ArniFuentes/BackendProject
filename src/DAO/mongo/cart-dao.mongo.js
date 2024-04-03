@@ -6,7 +6,6 @@ class CartDAOMongo {
       const newCart = await Cart.create({ products: [], user: userId });
       return newCart;
     } catch (error) {
-      console.error("Error en createCart:", error);
       throw error;
     }
   }
@@ -21,7 +20,6 @@ class CartDAOMongo {
       }
       return cart;
     } catch (error) {
-      console.error("Error en getCartById:", error);
       throw error;
     }
   }
@@ -31,7 +29,6 @@ class CartDAOMongo {
       const result = await Cart.findByIdAndUpdate(cartId, updatedCart);
       return result;
     } catch (error) {
-      console.error("Error en updateCart:", error);
       throw error;
     }
   }

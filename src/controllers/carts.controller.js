@@ -124,6 +124,7 @@ router.delete("/:cid", async (req, res) => {
       .status(HTTP_RESPONSES.DELETED)
       .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
   } catch (error) {
+    req.logger.error("Error al eliminar todos los productos del carrito:", error);
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
       .json({ status: "error", error });
