@@ -18,6 +18,8 @@ const productSchema = new mongoose.Schema({
   status: { type: Boolean, default: true },
   createdAt: Date,
   updatedAt: Date,
+  // Referencia a la persona que creó el producto
+  owner: { type: String, default: "admin" },
 });
 
 // Agregar el plugin de paginación

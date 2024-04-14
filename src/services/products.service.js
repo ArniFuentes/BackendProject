@@ -35,7 +35,7 @@ const getOne = async (productId) => {
   }
 };
 
-const insertOne = async (newProductInfo) => {
+const insertOne = async (newProductInfo) => { 
   try {
     newProductInfo.createdAt = new Date();
     const newProduct = await productRepository.createProduct(newProductInfo);

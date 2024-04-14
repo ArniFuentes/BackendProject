@@ -9,6 +9,7 @@ const chatsController = require("../controllers/chats.controller");
 const sessionsController = require("../controllers/sessions.controller");
 const mockingController = require("../controllers/mocking.controller");
 const loggerTestController = require("../controllers/loggers.controller");
+const userRoleController = require("../controllers/userRoleController");
 
 const router = (app) => {
   app.use("/api/products", productsController);
@@ -23,6 +24,7 @@ const router = (app) => {
   app.use("/mockingproducts", mockingController);
   // Agrega el enrutador para probar los logs
   app.use("/loggerTest", loggerTestController);
+  app.use("/api/users", userRoleController);
 };
 
 module.exports = router;

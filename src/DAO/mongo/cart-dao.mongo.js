@@ -12,9 +12,8 @@ class CartDAOMongo {
 
   async getCartById(cartId) {
     try {
-      const cart = await Cart.findById(cartId)
-        .populate("products.product")
-        // .lean();
+      const cart = await Cart.findById(cartId).populate("products.product");
+      // .lean();
       if (!cart) {
         throw new Error("Cart not found");
       }

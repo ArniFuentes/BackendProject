@@ -36,6 +36,7 @@ class ProductDAO {
       return await Product.create(newProductInfo);
       
     } catch (error) {
+      console.log("en el catch del dao")
       throw error;
     }
   }

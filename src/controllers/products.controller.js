@@ -46,7 +46,7 @@ router.get("/:pid", async (req, res) => {
     const product = await productsService.getOne(productId);
     res.json({ status: "success", payload: product });
   } catch (error) {
-    req.logger.error("Error al obtener productos:", error);  // Registrar error en caso de excepción
+    req.logger.error("Error al obtener productos:", error); // Registrar error en caso de excepción
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
       .json({ status: "error", error });
@@ -77,7 +77,7 @@ router.get("/:pid", async (req, res) => {
 router.post(
   "/",
   passport.authenticate("current", { session: false }),
-  authRoleMiddleware(["admin"]), // Solo administradores pueden crear productos
+  authRoleMiddleware(["admin", "premium"]), // Perfiles que pueden crear productos
   async (req, res, next) => {
     try {
       const newProductInfo = new NewProductDto(req.body);
@@ -91,9 +91,9 @@ router.post(
         "stock",
         "category",
       ];
+
       for (const field of requiredFields) {
         if (!newProductInfo[field]) {
-          // errorDictionary.PRODUCT_CREATION_ERROR();
           CustomError.createError({
             name: "ProductCreationError",
             message: "Error creating product",
@@ -102,9 +102,15 @@ router.post(
         }
       }
 
+      if (req.user.role === "premium") {
+        // user contiene la información del usuario autenticado (un objeto)
+        const ownerEmail = req.user.email;
+        // Asignar el propietario al nuevo producto
+        newProductInfo.owner = ownerEmail;
+      }
+
       // Crear el nuevo producto
       const newProduct = await productsService.insertOne(newProductInfo);
-
       res
         .status(HTTP_RESPONSES.CREATED)
         .json({ status: "success", payload: newProduct });
@@ -184,14 +190,33 @@ router.put(
 router.delete(
   "/:pid",
   passport.authenticate("current", { session: false }),
-  authRoleMiddleware(["admin"]), // Solo administradores pueden borrar productos
+  // El admin pueda borrar cualquier producto
+  authRoleMiddleware(["admin", "premium"]),
   async (req, res) => {
     try {
       const { pid } = req.params;
-      await productsService.deleteOne(pid);
-      res
-        .status(HTTP_RESPONSES.DELETED)
-        .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
+      const product = await productsService.getOne(pid);
+
+      // Verificar si el usuario es premium y si el producto le pertenece
+      if (req.user.role === "premium" && product.owner === req.user.email) {
+        // Si es premium y el producto le pertenece, permitir la eliminación del producto
+        await productsService.deleteOne(pid);
+        return res
+          .status(HTTP_RESPONSES.DELETED)
+          .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
+      }
+
+      // El admin pueda borrar cualquier producto
+      if (req.user.role === "admin") {
+        await productsService.deleteOne(pid);
+        return res
+          .status(HTTP_RESPONSES.DELETED)
+          .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
+      }
+      return res.status(403).json({
+        status: "error",
+        error: "No tienes permisos para eliminar este producto.",
+      });
     } catch (error) {
       req.logger.error("Error al crear un producto:", error);
       res

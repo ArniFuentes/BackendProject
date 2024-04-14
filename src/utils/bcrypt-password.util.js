@@ -6,8 +6,8 @@ const createHash = (password) => {
   return bcrypt.hashSync(password, salt);
 };
 
+// Comparar la clave encriptada con la que se ingresó en el login y devuelve true o false
 const useValidPassword = (user, password) => {
-  // Comparar la clave encriptada con la que se ingresó en el login y devuelve true o false
   return bcrypt.compareSync(password, user.password);
 };
 

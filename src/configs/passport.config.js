@@ -15,15 +15,15 @@ const ExtractJwt = jwt.ExtractJwt;
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
+  // decodifica el token para obtener la información del usuario incluida en él
   passport.use(
     "current",
     new JwtStrategy(
-      // Primer argumento
       {
         jwtFromRequest: ExtractJwt.fromExtractors([extractJwtCookie]),
         secretOrKey: secret,
       },
-      // Segundo argumento (en credencials esta el objeto descifrado)
+      // en credencials esta la información del usuario incluida en el token
       (credentials, done) => {
         try {
           done(null, credentials);
@@ -43,7 +43,18 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         try {
           const { first_name, last_name, email } = req.body;
+
+          // Verificar si first_name y last_name están presentes
+          if (!first_name || !last_name) {
+            return done(
+              null,  // no se debe a un error interno del servidor
+              false,  // credenciales proporcionados no son válidas
+              { message: "El nombre y apellido son obligatorios",}
+            );
+          }
+
           const user = await Users.findOne({ email: username });
+
           // Si existe el usuario
           if (user) {
             return done(null, false); // Rompe la ejecución
@@ -78,14 +89,14 @@ const initializePassport = () => {
         try {
           // Buscar el usuario en la base de datos utilizando el correo electrónico
           const user = await Users.findOne({ email: username });
-        
+
           if (!user) {
-            // console.log("Usuario no existe");
+            console.log("Usuario no existe");
             return done(null, false);
           }
 
           if (!useValidPassword(user, password)) {
-            // console.log("Password no hace match");
+            console.log("Password no hace match");
             //  no hubo errores durante la autenticación (null) y no se encontró ningún usuario autenticado (false)
             done(null, false);
           }
@@ -113,8 +124,8 @@ const initializePassport = () => {
         try {
           const { id, login, name, email } = profile._json;
 
-          const user = await Users.findOne({ email: email }); 
-          
+          const user = await Users.findOne({ email: email });
+
           if (!user) {
             const newUserInfo = {
               first_name: name,
@@ -127,7 +138,6 @@ const initializePassport = () => {
           }
 
           return done(null, user);
-
         } catch (error) {
           done(error);
         }

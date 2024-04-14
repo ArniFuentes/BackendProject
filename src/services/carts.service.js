@@ -6,11 +6,26 @@ const ProductRepository = require("../repositories/product.repository");
 const TicketRepository = require("../repositories/ticket.repository");
 const UserRepository = require("../repositories/users.repository");
 const { ObjectId } = require("mongodb");
+const productsService = require("./products.service");
+const userService = require("./users.service");
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
 const ticketRepository = new TicketRepository();
 const userRepository = new UserRepository();
+
+// Validar si un usuario premium está intentando agregar su propio producto al carrito
+const validatePremiumUser = async (userId, productId) => {
+  const product = await productsService.getOne(productId);
+  const user = await userService.getOne(userId);
+  if (user.role === "premium") {
+    if (product.owner === user.email) {
+      throw new Error(
+        "Un usuario premium no puede agregar su propio producto al carrito."
+      );
+    }
+  }
+};
 
 //  Manejar la lógica de agregar un producto al carrito solo si no existe
 const addProductToCartIfNotExists = async (cartId, productId, userId) => {
@@ -257,4 +272,5 @@ module.exports = {
   purchaseCart,
   updateProductQuantityInCart,
   addProductToCartIfNotExists,
+  validatePremiumUser,
 };

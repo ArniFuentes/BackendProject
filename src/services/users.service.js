@@ -4,6 +4,21 @@ const UserRepository = require("../repositories/users.repository");
 
 const userRepository = new UserRepository();
 
+// Cambio de roles de usuario
+const toggleUserRole = async (userId) => {
+  try {
+    const user = await getOne(userId);
+
+    // Si user.role === "user" es verdadero, devolver "premium" sino "user"
+    user.role = user.role === "user" ? "premium" : "user";
+
+    // Guardar el usuario actualizado en la base de datos
+    await userRepository.save(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getAll = async () => {
   try {
     return await userRepository.getAll();
@@ -20,4 +35,4 @@ const getOne = async (id) => {
   }
 };
 
-module.exports = { getAll, getOne };
+module.exports = { getAll, getOne, toggleUserRole };

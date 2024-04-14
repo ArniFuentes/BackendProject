@@ -9,7 +9,7 @@ const router = Router();
 
 router.get(
   "/",
-  // Proceso de autorización
+  // Validar las credenciales
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["admin"]),
   async (req, res) => {
@@ -22,10 +22,9 @@ router.get(
   }
 );
 
-// Ruta protegida
 router.get(
   "/:uid",
-  // Proceso de autorización
+  // Validar las credenciales
   passport.authenticate("current", { session: false }),
   async (req, res) => {
     try {

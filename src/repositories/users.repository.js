@@ -20,6 +20,14 @@ class UserRepository {
       throw error;
     }
   }
+
+  async save(user) {
+    try {
+      return await this.userDAO.save(user);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = UserRepository;
