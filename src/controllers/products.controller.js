@@ -9,7 +9,7 @@ const errorDictionary = require("../handlers/errors/error-diccionary");
 
 const router = Router();
 
-// Para obtener productos
+// Respoder productos
 router.get("/", async (req, res) => {
   try {
     const page = req.query.page || 1;
@@ -44,6 +44,7 @@ router.get("/:pid", async (req, res) => {
     const productId = req.params.pid;
     // Llamar a la función getOne con el productId y esperar la respuesta.
     const product = await productsService.getOne(productId);
+    console.log(product);
     res.json({ status: "success", payload: product });
   } catch (error) {
     req.logger.error("Error al obtener productos:", error); // Registrar error en caso de excepción

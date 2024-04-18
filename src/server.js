@@ -7,8 +7,24 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require("./middlewares/errors/index");
 const logger = require("./middlewares/logger.midleware");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUiExpress = require("swagger-ui-express");
 
 const app = express();
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.3",
+    info: {
+      title: "Documentation",
+      description: "This is the documentation",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.use(express.json());
 app.use(cookieParser()); // para obtener las cookies

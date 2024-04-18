@@ -45,6 +45,7 @@ router.get("/:cid", async (req, res) => {
 // Agregar un producto a un determinado carrito
 router.post(
   "/:cid/product/:pid",
+  // Presentar las credenciales presentes en el token a la api
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["user", "premium"]),
   async (req, res, next) => {

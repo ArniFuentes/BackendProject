@@ -27,7 +27,7 @@ class ProductDAO {
       return product;
       
     } catch (error) {
-      // throw error;
+      throw error;
     }
   }
 
@@ -57,7 +57,7 @@ class ProductDAO {
       return await Product.deleteOne({ _id: productId });
       
     } catch (error) {
-      // throw error;
+      throw error;
     }
   }
 }

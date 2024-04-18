@@ -18,9 +18,8 @@ class UserDAO {
   }
 
   async save(user) {
-    // return await user.save();
     // Guardar el nuevo usuario en la base de datos
-    await Users.create(user);
+    return await user.save();
   }
 }
 

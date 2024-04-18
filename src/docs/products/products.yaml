@@ -1,0 +1,126 @@
+openapi: 3.0.3
+info:
+  title: Product API
+  description: API para administrar productos
+  version: 1.0.0
+paths:
+  /api/products:
+    get:
+      summary: Obtener todos los productos
+      responses:
+        "200":
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      summary: Crear un nuevo producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Producto creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  api/products/{pid}:
+    get:
+      summary: Obtener un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: ID del producto a obtener
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    put:
+      summary: Actualizar un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: ID del producto
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: Producto actualizado con éxito
+    delete:
+      summary: Eliminar un producto por ID
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          description: ID del producto
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Producto eliminado con éxito
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del producto
+        title:
+          type: string
+          description: Título del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código del producto
+        price:
+          type: number
+          description: Precio del producto
+        stock:
+          type: number
+          description: Stock del producto
+        category:
+          type: string
+          description: Categoría del producto
+        thumbnails:
+          type: array
+          description: Imágenes del producto
+          items:
+            type: object
+        status:
+          type: boolean
+          description: Estado del producto
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha de creación del producto
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha de última actualización del producto
+        owner:
+          type: string
+          description: Propietario del producto
+
