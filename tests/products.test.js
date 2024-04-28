@@ -6,7 +6,7 @@ const requester = supertest("http://localhost:8080");
 describe("API Tests", () => {
   describe("Product Endpoint Tests", () => {
     // Prueba para verificar si el endpoint POST api/products crea un producto correctamente
-    it("Should create a product successfully when calling POST api/products", async () => {
+    it("Should return 401 Unauthorized when user is not authenticated when calling POST api/products", async () => {
       // Datos ficticios pasados por body
       const productMock = {
         title: "Reloj Inteligente Fitbit Versa 3",
@@ -17,10 +17,12 @@ describe("API Tests", () => {
         category: "Electrónica",
       };
 
-      const { statusCode, ok, body } = await requester
+      const response = await requester
         .post("/api/products")
         .send(productMock);
-      console.log(statusCode, ok, body);
+
+      // Verifica que la respuesta tenga el código de estado 401 (Unauthorized)
+      expect(response.status).to.equal(401);
     });
 
     // Prueba para verificar si el endpoint GET api/products/:pid obtiene un producto correctamente
@@ -34,7 +36,7 @@ describe("API Tests", () => {
       expect(response.status).to.equal(200);
       // Verificar que el cuerpo de la respuesta tenga una propiedad llamada "status" con el valor "success"
       expect(response.body).to.have.property("status", "success");
-      // verificar que el cuerpo de la respuesta tenga una propiedad llamada "payload". 
+      // verificar que el cuerpo de la respuesta tenga una propiedad llamada "payload".
       expect(response.body).to.have.property("payload");
       // verificar que el valor de la propiedad "payload" sea un objeto.
       expect(response.body.payload).to.be.an("object");
