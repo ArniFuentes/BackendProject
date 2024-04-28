@@ -4,4 +4,4 @@ const errorDictionary = {
   VALIDATION_ERROR: 1003,
 };
 
-module.exports = errorDictionary;
+export default errorDictionary;

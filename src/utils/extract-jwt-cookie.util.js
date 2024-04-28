@@ -6,4 +6,4 @@ const extractJwtCookie = (req) => {
     return token;
 };
 
-module.exports = extractJwtCookie;
+export default extractJwtCookie;

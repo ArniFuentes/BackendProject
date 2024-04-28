@@ -1,4 +1,4 @@
-const Ticket = require("../../models/ticket.model");
+import Ticket from "../../models/ticket.model.js";
 
 class TicketDAOMongo {
   async createTicket(ticketData) {
@@ -12,4 +12,4 @@ class TicketDAOMongo {
   }
 }
 
-module.exports = TicketDAOMongo;
+export default TicketDAOMongo;

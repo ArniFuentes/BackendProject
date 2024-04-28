@@ -1,6 +1,6 @@
-const passport = require("passport");
-const { Router } = require("express");
-const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
+import passport from "passport";
+import { Router } from "express";
+import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 
 const router = Router();
 
@@ -13,4 +13,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export default router;

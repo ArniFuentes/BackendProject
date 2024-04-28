@@ -1,6 +1,6 @@
 // Utilizar el UserRepository en lugar del UserDAO directamente
 
-const UserRepository = require("../repositories/users.repository");
+import UserRepository from "../repositories/users.repository.js";
 
 const userRepository = new UserRepository();
 
@@ -35,4 +35,8 @@ const getOne = async (id) => {
   }
 };
 
-module.exports = { getAll, getOne, toggleUserRole };
+export default {
+  toggleUserRole,
+  getAll,
+  getOne,
+};

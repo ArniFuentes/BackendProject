@@ -1,14 +1,14 @@
-const { Router } = require("express");
-const HTTP_RESPONSES = require("../constants/http-responses.contant");
-const cartsService = require("../services/carts.service");
-// const productsService = require("../services/products.service");
-const passport = require("passport");
-const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
-const CartDTO = require("../DTOs/cart.dto");
-const CartValidatorDTO = require("../DTOs/cart-validator.dto");
-const CartQuantityValidatorDTO = require("../DTOs/cart-quantity-validator.dto");
-// const CustomError = require("../handlers/errors/customError");
-// const errorDictionary = require("../handlers/errors/error-diccionary");
+import { Router } from "express";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import cartsService from "../services/carts.service.js";
+// import productsService from "../services/products.service.mjs";
+import passport from "passport";
+import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
+import CartDTO from "../DTOs/cart.dto.js";
+import CartValidatorDTO from "../DTOs/cart-validator.dto.js";
+import CartQuantityValidatorDTO from "../DTOs/cart-quantity-validator.dto.js";
+// import CustomError from "../handlers/errors/customError.mjs";
+// import errorDictionary from "../handlers/errors/error-diccionary.mjs";
 
 const router = Router();
 
@@ -177,4 +177,4 @@ router.post(
   }
 );
 
-module.exports = router;
+export default router;

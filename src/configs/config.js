@@ -1,7 +1,8 @@
-// Para leer variables de entorno desde el .env
-require("dotenv").config();
+import dotenv from "dotenv";
 
-module.exports = {
+dotenv.config();
+
+const config = {
   dbUser: process.env.DB_USER,
   dbPassword: process.env.DB_PASSWORD,
   dbHost: process.env.DB_HOST,
@@ -13,3 +14,7 @@ module.exports = {
   emailPassword: process.env.EMAIL_PASSWORD,
   environment: process.env.NODE_ENV
 };
+
+export default config;
+
+

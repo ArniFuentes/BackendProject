@@ -1,4 +1,4 @@
-const winston = require("winston");
+import winston from "winston";
 
 // Configuración del logger para producción
 const productionLogger = winston.createLogger({
@@ -21,4 +21,4 @@ const productionLogger = winston.createLogger({
   ],
 });
 
-module.exports = productionLogger;
+export default productionLogger;

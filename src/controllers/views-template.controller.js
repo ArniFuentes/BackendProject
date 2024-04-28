@@ -1,4 +1,4 @@
-const { Router } = require("express");
+import { Router } from "express";
 
 const router = Router();
 
@@ -10,4 +10,4 @@ router.get("/signup", (req, res) => {
   res.render("signup.handlebars");
 });
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const { secret } = require("../configs/config");
+import jwt from "jsonwebtoken";
+import config from "../configs/config.js";
 
 const generateToken = (user) => {
-  return jwt.sign(user, secret);
+  return jwt.sign(user, config.secret);
 };
 
-module.exports = generateToken;
+export default generateToken;

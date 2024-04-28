@@ -1,4 +1,4 @@
-const ProductRepository = require("../repositories/product.repository");
+import ProductRepository from "../repositories/product.repository.js";
 
 const productRepository = new ProductRepository();
 
@@ -62,12 +62,10 @@ const deleteOne = async (productId) => {
   }
 };
 
-// Exportar el objeto con las funciones
-module.exports = {
+export default {
   getAll,
-  insertOne,
   getOne,
+  insertOne,
   updateOne,
   deleteOne,
-  // getAllProducts,
 };

@@ -1,12 +1,11 @@
-const getLogger = require("../utils/winston/factory");
-
-const mongoose = require("mongoose");
-const { dbUser, dbPassword, dbHost, dbName } = require("../configs/config");
+import mongoose from "mongoose";
+import getLogger from "../utils/winston/factory.js";
+import config from "../configs/config.js";
 
 const mongoConnect = async () => {
   try {
     await mongoose.connect(
-      // `mongodb+srv://${dbUser}:${dbPassword}@${dbHost}/${dbName}?retryWrites=true&w=majority&appName=Cluster0`
+      // `mongodb+srv://${config.dbUser}:${config.dbPassword}@${config.dbHost}/${config.dbName}?retryWrites=true&w=majority&appName=Cluster0`
       "mongodb://localhost:27017/test_coder"
     );
     getLogger.info("DB is connected")
@@ -15,4 +14,4 @@ const mongoConnect = async () => {
   }
 };
 
-module.exports = mongoConnect;
+export default mongoConnect;

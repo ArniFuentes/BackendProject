@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 // Incluir el plugin para la paginación
-const mongoosePaginate = require("mongoose-paginate-v2");
+import mongoosePaginate from "mongoose-paginate-v2";
 
 // Nombre de la colección
 const productCollection = "product";
@@ -27,4 +27,4 @@ productSchema.plugin(mongoosePaginate);
 
 const Product = mongoose.model(productCollection, productSchema);
 
-module.exports = Product;
+export default Product;

@@ -1,4 +1,4 @@
-const CartDAOMongo = require("../DAO/mongo/cart-dao.mongo");
+import CartDAOMongo from "../DAO/mongo/cart-dao.mongo.js";
 
 class CartRepository {
   constructor() {
@@ -30,4 +30,4 @@ class CartRepository {
   }
 }
 
-module.exports = CartRepository;
+export default CartRepository;

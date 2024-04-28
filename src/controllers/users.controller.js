@@ -1,9 +1,9 @@
-const { Router } = require("express");
-const passport = require("passport");
-const usersService = require("../services/users.service");
-const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
-const transport = require("../utils/nodemailer.util");
-const { emailUser } = require("../configs/config");
+import { Router } from "express";
+import passport from "passport";
+import usersService from "../services/users.service.js";
+import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
+import transport from "../utils/nodemailer.util.js";
+import config from "../configs/config.js";
 
 const router = Router();
 
@@ -18,6 +18,7 @@ router.get(
       res.json({ message: users });
     } catch (error) {
       req.logger.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
@@ -33,7 +34,7 @@ router.get(
       res.json({ message: user });
     } catch (error) {
       req.logger.error(error);
-      res.json({ error });
+      res.status(500).json({ error });
     }
   }
 );
@@ -48,7 +49,7 @@ router.post(
 
       // Enviar el correo electrónico
       const mailOptions = {
-        from: emailUser,
+        from: config.emailUser,
         to: req.body.email, // Tomar el correo del usuario registrado
         subject: "Registro exitoso!!",
         html: "<h1>¡Gracias por registrarte!</h1>",
@@ -62,4 +63,4 @@ router.post(
   }
 );
 
-module.exports = router;
+export default router;

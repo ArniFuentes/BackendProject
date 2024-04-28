@@ -1,11 +1,11 @@
-const { Router } = require("express");
-const HTTP_RESPONSES = require("../constants/http-responses.contant");
-const productsService = require("../services/products.service");
-const NewProductDto = require("../DTOs/new-product.dto");
-const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
-const passport = require("passport");
-const CustomError = require("../handlers/errors/customError");
-const errorDictionary = require("../handlers/errors/error-diccionary");
+import { Router } from "express";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import productsService from "../services/products.service.js";
+import NewProductDto from "../DTOs/new-product.dto.js";
+import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
+import passport from "passport";
+import CustomError from "../handlers/errors/customError.js";
+import errorDictionary from "../handlers/errors/error-diccionary.js";
 
 const router = Router();
 
@@ -109,7 +109,7 @@ router.post(
         // Asignar el propietario al nuevo producto
         newProductInfo.owner = ownerEmail;
       }
-
+   
       // Crear el nuevo producto
       const newProduct = await productsService.insertOne(newProductInfo);
       res
@@ -227,4 +227,5 @@ router.delete(
   }
 );
 
-module.exports = router;
+export default router;
+

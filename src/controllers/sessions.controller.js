@@ -1,10 +1,10 @@
-const { Router } = require("express");
-const passport = require("passport");
-const CurrentUserDTO = require("../DTOs/current-user.dto");
+import { Router } from "express";
+import passport from "passport";
+import CurrentUserDTO from "../DTOs/current-user.dto.js";
 
 const router = Router();
 
-// Enviar la información del usuario que que está autenticado
+// Enviar la información del usuario que está autenticado
 router.get(
   "/current",
   passport.authenticate("current", { session: false }),
@@ -19,28 +19,4 @@ router.get(
   }
 );
 
-module.exports = router;
-
-// const { Router } = require("express");
-// const passport = require("passport");
-
-// const router = Router();
-
-// // Si el usuario está autenticado correctamente, se devolverá la información del usuario 
-// router.get(
-//   "/current",
-//   // Aplicar el middleware 
-//   passport.authenticate("current", { session: false }),
-//   (req, res) => {
-//     try {
-//       // En este punto, el usuario actual está autenticado y disponible en req.user
-//       res.json(req.user); // Devuelve el usuario actual en una respuesta JSON
-//     } catch (error) {
-//       req.logger.error(error);
-//     }
-//   }
-// );
-
-// module.exports = router;
-
-
+export default router;

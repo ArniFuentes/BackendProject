@@ -1,5 +1,5 @@
 // Para validar la cantidad de ejemplares del producto
-class CartQuantityValidatorDTO {
+export default class CartQuantityValidatorDTO {
   constructor(data) {
     this.quantity = data.quantity;
   }
@@ -10,5 +10,3 @@ class CartQuantityValidatorDTO {
     }
   }
 }
-
-module.exports = CartQuantityValidatorDTO;

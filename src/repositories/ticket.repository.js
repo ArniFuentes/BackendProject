@@ -1,4 +1,4 @@
-const TicketDAOMongo = require("../DAO/mongo/ticket-dao.mongo");
+import TicketDAOMongo from "../DAO/mongo/ticket-dao.mongo.js";
 
 class TicketRepository {
   constructor() {
@@ -14,4 +14,4 @@ class TicketRepository {
   }
 }
 
-module.exports = TicketRepository;
+export default TicketRepository;

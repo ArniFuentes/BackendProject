@@ -1,14 +1,19 @@
-const express = require("express");
-const handlebars = require("express-handlebars");
-const router = require("./router/index");
-const mongoConnect = require("./db/index");
-const initializePassport = require("./configs/passport.config");
-const passport = require("passport");
-const cookieParser = require("cookie-parser");
-const errorMiddleware = require("./middlewares/errors/index");
-const logger = require("./middlewares/logger.midleware");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUiExpress = require("swagger-ui-express");
+import express from "express";
+import handlebars from "express-handlebars";
+import router from "./router/index.js";
+import mongoConnect from "./db/index.js";
+import initializePassport from "./configs/passport.config.js";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+import errorMiddleware from "./middlewares/errors/index.js";
+import logger from "./middlewares/logger.midleware.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -20,6 +25,7 @@ const swaggerOptions = {
       description: "This is the documentation",
     },
   },
+  // Ruta a los archivos que van a tener la documentación
   apis: [`${__dirname}/docs/**/*.yaml`],
 };
 
@@ -50,4 +56,4 @@ app.use(errorMiddleware);
 
 mongoConnect();
 
-module.exports = app;
+export default app;

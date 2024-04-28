@@ -12,4 +12,4 @@ const HTTP_RESPONSES = {
   BAD_REQUEST_CONTENT: "Bad request",
 };
 
-module.exports = HTTP_RESPONSES;
+export default HTTP_RESPONSES;

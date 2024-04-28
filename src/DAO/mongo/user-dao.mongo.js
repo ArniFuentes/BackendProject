@@ -1,9 +1,9 @@
-const Users = require("../../models/user.model");
+import User from "../../models/user.model.js";
 
 class UserDAO {
   async find() {
     try {
-      return await Users.find();
+      return await User.find();
     } catch (error) {
       throw error;
     }
@@ -11,7 +11,7 @@ class UserDAO {
 
   async findOne(id) {
     try {
-      return await Users.findOne({ _id: id });
+      return await User.findOne({ _id: id });
     } catch (error) {
       throw error;
     }
@@ -23,4 +23,4 @@ class UserDAO {
   }
 }
 
-module.exports = UserDAO;
+export default UserDAO;

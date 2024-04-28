@@ -1,5 +1,5 @@
-const { Router } = require("express");
-const productsService = require("../services/products.service");
+import { Router } from "express";
+import productsService from "../services/products.service.js";
 
 const router = Router();
 
@@ -18,4 +18,4 @@ router.get("/", async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

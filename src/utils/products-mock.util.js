@@ -1,4 +1,4 @@
-const { faker } = require("@faker-js/faker");
+import { faker } from "@faker-js/faker";
 
 // Función para generar productos ficticios usando faker
 function generateMockProducts(quantity) {
@@ -18,4 +18,4 @@ function generateMockProducts(quantity) {
   return mockProducts;
 }
 
-module.exports = { generateMockProducts };
+export { generateMockProducts };

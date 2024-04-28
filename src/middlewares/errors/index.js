@@ -1,4 +1,4 @@
-const errorDictionary = require("../../handlers/errors/error-diccionary");
+import errorDictionary from "../../handlers/errors/error-diccionary.js";
 
 const errorMiddleware = (err, req, res, next) => {
   if (err.code === errorDictionary.PRODUCT_UPDATE_ERROR) {
@@ -24,4 +24,4 @@ const errorMiddleware = (err, req, res, next) => {
   res.status(500).json({ status: "error", error: "Internal Server Error" });
 };
 
-module.exports = errorMiddleware;
+export default errorMiddleware;

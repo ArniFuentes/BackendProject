@@ -1,14 +1,11 @@
-const passport = require("passport");
-const jwt = require("passport-jwt");
-const local = require("passport-local");
-const GithubStrategy = require("passport-github2");
-const { secret, ghClientId, ghClientSecret, dbUser } = require("./config");
-const extractJwtCookie = require("../utils/extract-jwt-cookie.util");
-const Users = require("../models/user.model");
-const {
-  createHash,
-  useValidPassword,
-} = require("../utils/bcrypt-password.util");
+import passport from "passport";
+import jwt from "passport-jwt";
+import local from "passport-local";
+import GithubStrategy from "passport-github2";
+import config from "./config.js";
+import extractJwtCookie from "../utils/extract-jwt-cookie.util.js";
+import Users from "../models/user.model.js";
+import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
 
 const JwtStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;
@@ -21,7 +18,7 @@ const initializePassport = () => {
     new JwtStrategy(
       {
         jwtFromRequest: ExtractJwt.fromExtractors([extractJwtCookie]),
-        secretOrKey: secret,
+        secretOrKey: config.secret,
       },
       // en credencials esta la información del usuario incluida en el token
       (credentials, done) => {
@@ -115,8 +112,8 @@ const initializePassport = () => {
     "github",
     new GithubStrategy(
       {
-        clientID: ghClientId,
-        clientSecret: ghClientSecret,
+        clientID: config.ghClientId,
+        clientSecret: config.ghClientSecret,
         callbackURL: "http://localhost:8080/auth/githubcallback",
       },
       // Info obtenida desde github (la info del profile se guarda en la base)
@@ -146,4 +143,4 @@ const initializePassport = () => {
   );
 };
 
-module.exports = initializePassport;
+export default initializePassport;

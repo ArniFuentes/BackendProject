@@ -1,4 +1,4 @@
-const Product = require("../../models/product.model");
+import Product from "../../models/product.model.js";
 
 class ProductDAO {
   async getProducts(page = 1, limit = 10, sortOptions = {}, filterOptions = {}) {
@@ -62,4 +62,4 @@ class ProductDAO {
   }
 }
 
-module.exports = ProductDAO;
+export default ProductDAO;

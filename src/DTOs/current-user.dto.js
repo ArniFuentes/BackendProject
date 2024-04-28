@@ -1,4 +1,4 @@
-class CurrentUserDTO {
+export default class CurrentUserDTO {
   constructor(user) {
     this.id = user.id;
     this.first_name = user.first_name;
@@ -6,5 +6,3 @@ class CurrentUserDTO {
     this.role = user.role;
   }
 }
-
-module.exports = CurrentUserDTO;

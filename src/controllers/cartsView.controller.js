@@ -1,6 +1,6 @@
-const { Router } = require("express");
-const HTTP_RESPONSES = require("../constants/http-responses.contant");
-const cartsService = require("../services/carts.service");
+import { Router } from "express";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import cartsService from "../services/carts.service.js";
 
 const router = Router();
 
@@ -21,4 +21,4 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

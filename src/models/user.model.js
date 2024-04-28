@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userCollection = "user";
 
@@ -20,6 +20,6 @@ const userSchema = new mongoose.Schema({
   githubId: Number,
 });
 
-const Users = mongoose.model(userCollection, userSchema);
+const User = mongoose.model(userCollection, userSchema);
 
-module.exports = Users;
+export default User;

@@ -1,5 +1,5 @@
 //  Estructurar y validar los datos que se reciben en el cuerpo de la solicitud
-class CartValidatorDTO {
+export default class CartValidatorDTO {
   constructor(data) {
     // Verificar si se proporcionó un arreglo de productos en el cuerpo de la solicitud
     if (!data || !Array.isArray(data.products)) {
@@ -18,5 +18,3 @@ class CartValidatorDTO {
     });
   }
 }
-
-module.exports = CartValidatorDTO;

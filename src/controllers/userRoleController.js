@@ -1,7 +1,7 @@
-const { Router } = require("express");
-const passport = require("passport");
-const authRoleMiddleware = require("../middlewares/auth-role.middlewares");
-const usersService = require("../services/users.service");
+import { Router } from "express";
+import passport from "passport";
+import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
+import usersService from "../services/users.service.js";
 
 const router = Router();
 
@@ -27,4 +27,4 @@ router.put(
   }
 );
 
-module.exports = router;
+export default router;

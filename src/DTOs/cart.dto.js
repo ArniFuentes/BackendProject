@@ -1,5 +1,5 @@
 // Representar los datos del carrito de una manera más clara y específica para el cliente
-class CartDTO {
+export default class CartDTO {
   constructor(cartData) {
     this.id = cartData._id; // ID del carrito
     this.user = cartData.user; // ID del usuario
@@ -9,5 +9,3 @@ class CartDTO {
     }));
   }
 }
-
-module.exports = CartDTO;

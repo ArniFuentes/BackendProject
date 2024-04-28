@@ -1,4 +1,4 @@
-class NewProductDto {
+export default class NewProductDto {
   constructor(newProductInfo) {
     this.title = newProductInfo.title;
     this.description = newProductInfo.description;
@@ -8,5 +8,3 @@ class NewProductDto {
     this.category = newProductInfo.category;
   }
 }
-
-module.exports = NewProductDto;

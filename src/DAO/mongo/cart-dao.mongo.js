@@ -1,4 +1,4 @@
-const Cart = require("../../models/cart.model");
+import Cart from "../../models/cart.model.js";
 
 class CartDAOMongo {
   async createCart(userId) {
@@ -76,4 +76,4 @@ class CartDAOMongo {
   }
 }
 
-module.exports = CartDAOMongo;
+export default CartDAOMongo;

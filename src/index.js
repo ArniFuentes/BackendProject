@@ -1,6 +1,6 @@
-const getLogger = require("./utils/winston/factory");
-const app = require("./server");
-const { Server } = require("socket.io");
+import getLogger from "./utils/winston/factory.js";
+import app from "./server.js";
+import { Server } from "socket.io";
 
 const chats = [];
 

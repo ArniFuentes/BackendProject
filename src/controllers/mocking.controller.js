@@ -1,6 +1,6 @@
-const { Router } = require("express");
-const HTTP_RESPONSES = require("../constants/http-responses.contant");
-const { generateMockProducts } = require("../utils/products-mock.util");
+import { Router } from "express";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import { generateMockProducts } from "../utils/products-mock.util.js";
 
 const router = Router();
 
@@ -12,8 +12,8 @@ router.get("/", (req, res) => {
   } catch (error) {
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error: error });
+      .json({ status: "error", error });
   }
 });
 
-module.exports = router;
+export default router;

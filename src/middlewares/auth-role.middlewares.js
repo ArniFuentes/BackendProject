@@ -7,4 +7,4 @@ const authRoleMiddleware = (roles) => {
   };
 };
 
-module.exports = authRoleMiddleware;
+export default authRoleMiddleware;

@@ -1,4 +1,4 @@
-const ProductDAOMongo = require("../DAO/mongo/product-dao.mongo");
+import ProductDAOMongo from "../DAO/mongo/product-dao.mongo.js";
 
 class ProductRepository {
   constructor() {
@@ -46,4 +46,4 @@ class ProductRepository {
   }
 }
 
-module.exports = ProductRepository;
+export default ProductRepository;

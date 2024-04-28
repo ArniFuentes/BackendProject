@@ -1,13 +1,13 @@
 //  Lógica de negocio
 
-const { v4: uuidv4 } = require("uuid");
-const CartRepository = require("../repositories/cart.repository");
-const ProductRepository = require("../repositories/product.repository");
-const TicketRepository = require("../repositories/ticket.repository");
-const UserRepository = require("../repositories/users.repository");
-const { ObjectId } = require("mongodb");
-const productsService = require("./products.service");
-const userService = require("./users.service");
+import { v4 as uuidv4 } from "uuid";
+import CartRepository from "../repositories/cart.repository.js";
+import ProductRepository from "../repositories/product.repository.js";
+import TicketRepository from "../repositories/ticket.repository.js";
+import UserRepository from "../repositories/users.repository.js";
+import { ObjectId } from "mongodb";
+import * as productsService from "./products.service.js";
+import * as userService from "./users.service.js";
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
@@ -262,15 +262,17 @@ const purchaseCart = async (cartId) => {
   }
 };
 
-module.exports = {
+export default {
+  validatePremiumUser,
+  addProductToCartIfNotExists,
+  updateProductQuantityInCart,
   insertOne,
   getCartById,
   addProductToCart,
   removeProductFromCart,
   removeAllProductsFromCart,
   updateCart,
+  calculateTotalAmount,
+  getUserEmail,
   purchaseCart,
-  updateProductQuantityInCart,
-  addProductToCartIfNotExists,
-  validatePremiumUser,
 };

@@ -1,4 +1,4 @@
-const UserDAO = require("../DAO/mongo/user-dao.mongo");
+import UserDAO from "../DAO/mongo/user-dao.mongo.js";
 
 class UserRepository {
   constructor() {
@@ -30,4 +30,4 @@ class UserRepository {
   }
 }
 
-module.exports = UserRepository;
+export default UserRepository;

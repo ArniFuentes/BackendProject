@@ -1,15 +1,15 @@
-const productsController = require("../controllers/products.controller");
-const cartsController = require("../controllers/carts.controller");
-const cartsViewController = require("../controllers/cartsView.controller");
-const productsViewController = require("../controllers/productsViewController");
-const authController = require("../controllers/auth.controller");
-const viewsTemplateController = require("../controllers/views-template.controller");
-const usersController = require("../controllers/users.controller");
-const chatsController = require("../controllers/chats.controller");
-const sessionsController = require("../controllers/sessions.controller");
-const mockingController = require("../controllers/mocking.controller");
-const loggerTestController = require("../controllers/loggers.controller");
-const userRoleController = require("../controllers/userRoleController");
+import productsController from "../controllers/products.controller.js";
+import cartsController from "../controllers/carts.controller.js";
+import cartsViewController from "../controllers/cartsView.controller.js";
+import productsViewController from "../controllers/productsViewController.js";
+import authController from "../controllers/auth.controller.js";
+import viewsTemplateController from "../controllers/views-template.controller.js";
+import usersController from "../controllers/users.controller.js";
+import chatsController from "../controllers/chats.controller.js";
+import sessionsController from "../controllers/sessions.controller.js";
+import mockingController from "../controllers/mocking.controller.js";
+import loggerTestController from "../controllers/loggers.controller.js";
+import userRoleController from "../controllers/userRoleController.js";
 
 const router = (app) => {
   app.use("/api/products", productsController);
@@ -27,4 +27,4 @@ const router = (app) => {
   app.use("/api/users", userRoleController);
 };
 
-module.exports = router;
+export default router;
