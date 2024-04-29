@@ -79,10 +79,11 @@ describe("Funcionalidades de la aplicación", () => {
 
   describe("Test: Enviar la información del usuario que está autenticado", () => {
     it("Debería enviar la información del usuario que está autenticado", async () => {
-      const response = await requester.get("/api/sessions/current");
-      console.log(response.body);
+      const response = await requester
+        .get("/api/sessions/current")
+        .set("Cookie", cookie);
 
-      // expect(response.status).to.equal(200);
+      expect(response.status).to.equal(200);
     });
   });
 });
