@@ -6,8 +6,8 @@ import ProductRepository from "../repositories/product.repository.js";
 import TicketRepository from "../repositories/ticket.repository.js";
 import UserRepository from "../repositories/users.repository.js";
 import { ObjectId } from "mongodb";
-import * as productsService from "./products.service.js";
-import * as userService from "./users.service.js";
+import productsService from "./products.service.js";
+import userService from "./users.service.js";
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();

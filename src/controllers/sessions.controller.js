@@ -2,6 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import CurrentUserDTO from "../DTOs/current-user.dto.js";
 
+
 const router = Router();
 
 // Enviar la información del usuario que está autenticado

@@ -5,7 +5,7 @@ import config from "../src/configs/config.js";
 
 const requester = supertest("http://localhost:8080");
 
-describe("Test 1: crear un producto en la base como usuario admin o premium autenticado", () => {
+describe("Test: crear un producto en la base como usuario admin o premium autenticado", () => {
   let cookie;
   it("Debería autenticar correctamente a un usuario", async function () {
     const user = {
@@ -36,7 +36,7 @@ describe("Test 1: crear un producto en la base como usuario admin o premium aute
   });
 });
 
-describe("Test 2: resporder un producto elegido", () => {
+describe("Test: resporder un producto elegido", () => {
   // Prueba para verificar si el endpoint GET api/products/:pid obtiene un producto correctamente
   it("Debería obtener un producto correctamente al llamar a GET api/products/:pid", async () => {
     // Supongamos que pid es un ID válido de un producto existente en tu base de datos
