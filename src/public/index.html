@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>Tienda</h1>
+
+    <div id="productList" class="product-list"></div>
+
+    <div class="buttons-container">
+      <button onclick="firstPage()">Primera</button>
+      <button onclick="prevPage()">Anterior</button>
+      <button onclick="nextPage()">Siguiente</button>
+      <button onclick="lastPage()">Última</button>
+    </div>
+
+    <button onclick="redirectToLogin()" class="login-button">
+      Iniciar sesión
+    </button>
+
+    <div id="cart" class="cart">
+      <h2>Carrito de Compra</h2>
+      <ul id="cartList"></ul>
+      <!-- <p>Total: $<span id="cartTotal">0.00</span></p> -->
+      <!-- <button onclick="checkout()">Pagar</button> -->
+      <button onclick="showAddedProducts(cartId)">Ver productos agregados</button>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

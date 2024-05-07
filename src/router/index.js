@@ -20,11 +20,11 @@ const router = (app) => {
   app.use("/products", productsViewController);
   app.use("/", viewsTemplateController);
   app.use("/auth", authController);
-  app.use("/users", usersController);
+  app.use("/api/users", usersController);
   app.use("/mockingproducts", mockingController);
   // Agrega el enrutador para probar los logs
   app.use("/loggerTest", loggerTestController);
-  app.use("/api/users", userRoleController);
+  // app.use("/api/users", userRoleController);
 };
 
 export default router;

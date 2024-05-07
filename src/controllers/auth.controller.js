@@ -4,7 +4,7 @@ import generateToken from "../utils/jwt.util.js";
 import config from "../configs/config.js";
 import transport from "../utils/nodemailer.util.js";
 import jwt from "jsonwebtoken";
-import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js"
+import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
 
 const router = Router();
 
@@ -77,7 +77,6 @@ router.get(
     }
   }
 );
-
 
 import User from "../models/user.model.js";
 // Manejar las solicitudes de restablecimiento de contraseña

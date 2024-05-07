@@ -18,6 +18,13 @@ const userSchema = new mongoose.Schema({
     default: "user", // Rol por defecto
   },
   githubId: Number,
+  documents: [
+    {
+      name: String,
+      reference: String,
+    },
+  ],
+  last_connection: Date,
 });
 
 const User = mongoose.model(userCollection, userSchema);

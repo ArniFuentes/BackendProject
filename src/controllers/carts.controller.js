@@ -32,13 +32,12 @@ router.get("/:cid", async (req, res) => {
   try {
     const cartId = req.params.cid;
     const cart = await cartsService.getCartById(cartId);
-    const cartDTO = new CartDTO(cart);
+    console.log(cart);
+    // const cartDTO = new CartDTO(cart);
 
-    res.json({ cart: cartDTO }); // Enviar el DTO como respuesta al cliente
+    res.status(200).json({ cart: cart }); // Enviar el DTO como respuesta al cliente
   } catch (error) {
-    res
-      .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error });
+    res.status(400).json({ status: "error", error });
   }
 });
 

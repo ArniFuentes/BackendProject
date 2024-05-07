@@ -1,0 +1,53 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrito de Compra</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>Carrito de Compra</h1>
+
+    <ul id="cartList" class="cart-list"></ul>
+
+    <p>Total: $<span id="cartTotal">0.00</span></p>
+
+    <button onclick="checkout()">Pagar</button>
+
+    <a href="index.html">Seguir Comprando</a>
+
+    <script src="js/cart.js"></script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrito de Compra</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>Carrito de Compra</h1>
+
+    <!-- <ul id="cartList" class="cart-list"></ul> -->
+    <table id="miTabla" border="1">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button onclick="comprarCarrito()">Pagar</button>
+
+    <a href="index.html">Seguir Comprando</a>
+
+    <script src="js/cart.js"></script>
+  </body>
+</html>
