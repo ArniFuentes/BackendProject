@@ -5,15 +5,33 @@ const storage = multer.diskStorage({
     let uploadFolder = "";
     if (file.fieldname === "profileImage") {
       uploadFolder = "profiles";
-    } else if (file.fieldname === "productImage") {
+    }
+
+    if (file.fieldname === "productImage") {
       uploadFolder = "products";
-    } else {
+    }
+
+    if (file.fieldname === "identification") {
       uploadFolder = "documents";
     }
+
+    if (file.fieldname === "proof_of_address") {
+      uploadFolder = "documents";
+    }
+
+    if (file.fieldname === "bank_statement") {
+      uploadFolder = "documents";
+    }
+
     cb(null, `src/public/uploads/${uploadFolder}`);
   },
+  
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    // Genera un nuevo nombre de archivo basado en el ID del usuario y el timestamp
+    const userId = req.params.uid; // ID del usuario
+    const timestamp = Date.now(); // Timestamp actual
+    const filename = `${userId}_${timestamp}_${file.fieldname}.png`; // Nuevo nombre de archivo
+    cb(null, filename);
   },
 });
 
@@ -21,6 +39,6 @@ const upload = multer({ storage: storage });
 
 export default upload;
 
-
-
-
+// filename: function (req, file, cb) {
+//   cb(null, file.originalname);
+// },

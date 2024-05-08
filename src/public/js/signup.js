@@ -11,7 +11,7 @@ form.addEventListener("submit", (e) => {
 
   const fetchParams = {
     // Ruta a donde va el fetch
-    url: "/users",
+    url: "api/users",
     headers: {
       "Content-type": "application/json",
     },

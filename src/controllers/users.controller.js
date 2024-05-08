@@ -5,6 +5,9 @@ import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 import transport from "../utils/nodemailer.util.js";
 import config from "../configs/config.js";
 import upload from "../utils/multerConfig.js"; // Importa el middleware de Multer
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
 const router = Router();
 
@@ -64,24 +67,99 @@ router.post(
   }
 );
 
-// Definir la ruta para cambiar el rol de un usuario
+// // Definir la ruta para cambiar el rol de un usuario
+// router.put(
+//   "/premium/:uid",
+//   passport.authenticate("current", { session: false }),
+//   // solo los usuarios con roles de "user" y "premium" podrían acceder a la ruta
+//   authRoleMiddleware(["user", "premium"]),
+//   async (req, res, next) => {
+//     try {
+//       const userId = req.params.uid;
+
+//       // Llamar al servicio para cambiar el rol del usuario
+//       await usersService.toggleUserRole(userId);
+
+//       res
+//         .status(200)
+//         .json({ message: "Rol de usuario actualizado exitosamente." });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+
+// Definir la ruta para cambiar el rol de un usuario a premium
 router.put(
   "/premium/:uid",
   passport.authenticate("current", { session: false }),
   // solo los usuarios con roles de "user" y "premium" podrían acceder a la ruta
   authRoleMiddleware(["user", "premium"]),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
       const userId = req.params.uid;
 
-      // Llamar al servicio para cambiar el rol del usuario
-      await usersService.toggleUserRole(userId);
+      // Ruta a la carpeta documents
+      const directorio = path.join(
+        __dirname,
+        "..",
+        "public",
+        "uploads",
+        "documents"
+      );
 
-      res
-        .status(200)
-        .json({ message: "Rol de usuario actualizado exitosamente." });
+      fs.readdir(directorio, async (err, archivos) => {
+        if (err) {
+          console.error("Error al leer la carpeta:", err);
+          return;
+        }
+
+        // Filtra los archivos para obtener solo los que contienen el ID del usuario en el nombre
+        const userFiles = archivos.filter((file) => file.includes(userId));
+
+        // Obtiene los nombres de los archivos
+        const fileNames = userFiles.map((file) => {
+          // Encontrar la posición del segundo guion bajo '_'
+          const primerGuionBajoIndex = file.indexOf("_");
+          const segundoGuionBajoIndex = file.indexOf(
+            "_",
+            primerGuionBajoIndex + 1
+          );
+
+          const namePlusExtensionList = file.substring(
+            segundoGuionBajoIndex + 1
+          );
+          const nameWithoutExtension = namePlusExtensionList.slice(0, -4);
+          return nameWithoutExtension;
+        });
+
+        // Verificar si el usuario ha cargado todos los documentos necesarios
+        const requiredDocuments = [
+          "identification",
+          "proof_of_address",
+          "bank_statement",
+        ];
+
+        const hasAllRequiredDocuments = requiredDocuments.every((doc) =>
+          fileNames.includes(doc)
+        );
+
+        if (!hasAllRequiredDocuments) {
+          return res.status(400).json({
+            error: "No ha cargado todos los documentos necesarios.",
+          });
+        }
+        // Llamar al servicio para cambiar el rol del usuario a premium
+        await usersService.toggleUserRole(userId);
+        res
+          .status(200)
+          .json({ message: "Rol de usuario actualizado exitosamente." });
+      });
     } catch (error) {
-      next(error);
+      // next(error);
+      console.log(error);
     }
   }
 );
@@ -93,8 +171,8 @@ router.post(
   upload.any(), // Utiliza el middleware de Multer para manejar la subida de archivos
   async (req, res) => {
     try {
-      const uploadedDocuments = req.files; // Array de objetos con los archivos subidos
-      console.log(uploadedDocuments);
+      // const uploadedDocuments = req.files; // Array de objetos con los archivos subidos
+      // console.log(uploadedDocuments);
       res.status(200).json({ message: "Documentos subidos exitosamente" });
     } catch (error) {
       res.status(400).json({ error: error });
