@@ -151,7 +151,7 @@ router.put(
             error: "No ha cargado todos los documentos necesarios.",
           });
         }
-        // Llamar al servicio para cambiar el rol del usuario a premium
+        // Llamar al servicio para cambiar el rol del usuario
         await usersService.toggleUserRole(userId);
         res
           .status(200)
