@@ -9,7 +9,6 @@ import chatsController from "../controllers/chats.controller.js";
 import sessionsController from "../controllers/sessions.controller.js";
 import mockingController from "../controllers/mocking.controller.js";
 import loggerTestController from "../controllers/loggers.controller.js";
-import userRoleController from "../controllers/userRoleController.js";
 
 const router = (app) => {
   app.use("/api/products", productsController);
@@ -24,7 +23,6 @@ const router = (app) => {
   app.use("/mockingproducts", mockingController);
   // Agrega el enrutador para probar los logs
   app.use("/loggerTest", loggerTestController);
-  // app.use("/api/users", userRoleController);
 };
 
 export default router;

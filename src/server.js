@@ -5,7 +5,7 @@ import mongoConnect from "./db/index.js";
 import initializePassport from "./configs/passport.config.js";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-// import errorMiddleware from "./middlewares/errors/index.js";
+import errorMiddleware from "./middlewares/errors/index.js";
 import logger from "./middlewares/logger.midleware.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
@@ -52,7 +52,7 @@ app.set("views", process.cwd() + "/src/views"); // Ruta de las plantillas
 app.use(express.urlencoded({ extended: true })); // Para pasar a objeto lo que venga de formulario
 
 router(app);
-// app.use(errorMiddleware);
+app.use(errorMiddleware);
 
 mongoConnect();
 

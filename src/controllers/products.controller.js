@@ -54,73 +54,73 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-// Crear un producto en la base
-router.post(
-  "/",
-  passport.authenticate("current", { session: false }),
-  authRoleMiddleware(["admin", "premium"]), // Perfiles que pueden crear productos
-  async (req, res) => {
-    try {
-      const newProductInfo = new NewProductDto(req.body);
-      const newproduct = await productsService.insertOne(newProductInfo);
-
-      res
-        .status(HTTP_RESPONSES.CREATED)
-        .json({ status: "success", payload: newproduct });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ status: "error", error });
-    }
-  }
-);
-
 // // Crear un producto en la base
 // router.post(
 //   "/",
 //   passport.authenticate("current", { session: false }),
 //   authRoleMiddleware(["admin", "premium"]), // Perfiles que pueden crear productos
-//   async (req, res, next) => {
+//   async (req, res) => {
 //     try {
 //       const newProductInfo = new NewProductDto(req.body);
+//       const newproduct = await productsService.insertOne(newProductInfo);
 
-//       // Validar campos requeridos
-//       const requiredFields = [
-//         "title",
-//         "description",
-//         "code",
-//         "price",
-//         "stock",
-//         "category",
-//       ];
-
-//       for (const field of requiredFields) {
-//         if (!newProductInfo[field]) {
-//           CustomError.createError({
-//             name: "ProductCreationError",
-//             message: "Error creating product",
-//             code: errorDictionary.PRODUCT_CREATION_ERROR,
-//           });
-//         }
-//       }
-
-//       if (req.user.role === "premium") {
-//         // user contiene la información del usuario autenticado (un objeto)
-//         const ownerEmail = req.user.email;
-//         // Asignar el propietario al nuevo producto
-//         newProductInfo.owner = ownerEmail;
-//       }
-   
-//       // Crear el nuevo producto
-//       const newProduct = await productsService.insertOne(newProductInfo);
 //       res
 //         .status(HTTP_RESPONSES.CREATED)
-//         .json({ status: "success", payload: newProduct });
+//         .json({ status: "success", payload: newproduct });
 //     } catch (error) {
-//       next(error);
+//       res
+//         .status(500)
+//         .json({ status: "error", error });
 //     }
 //   }
 // );
+
+// Crear un producto en la base
+router.post(
+  "/",
+  passport.authenticate("current", { session: false }),
+  authRoleMiddleware(["admin", "premium"]), // Perfiles que pueden crear productos
+  async (req, res, next) => {
+    try {
+      const newProductInfo = new NewProductDto(req.body);
+
+      // Validar campos requeridos
+      const requiredFields = [
+        "title",
+        "description",
+        "code",
+        "price",
+        "stock",
+        "category",
+      ];
+
+      for (const field of requiredFields) {
+        if (!newProductInfo[field]) {
+          CustomError.createError({
+            name: "ProductCreationError",
+            message: "Error creating product",
+            code: errorDictionary.PRODUCT_CREATION_ERROR,
+          });
+        }
+      }
+
+      if (req.user.role === "premium") {
+        // user contiene la información del usuario autenticado (un objeto)
+        const ownerEmail = req.user.email;
+        // Asignar el propietario al nuevo producto
+        newProductInfo.owner = ownerEmail;
+      }
+   
+      // Crear el nuevo producto
+      const newProduct = await productsService.insertOne(newProductInfo);
+      res
+        .status(HTTP_RESPONSES.CREATED)
+        .json({ status: "success", payload: newProduct });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // // Actualizar un producto completamente, todo lo que no se envía quedará como undefined
 // router.put(
