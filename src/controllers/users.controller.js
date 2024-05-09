@@ -171,8 +171,6 @@ router.post(
   upload.any(), // Utiliza el middleware de Multer para manejar la subida de archivos
   async (req, res) => {
     try {
-      // const uploadedDocuments = req.files; // Array de objetos con los archivos subidos
-      // console.log(uploadedDocuments);
       res.status(200).json({ message: "Documentos subidos exitosamente" });
     } catch (error) {
       res.status(400).json({ error: error });
