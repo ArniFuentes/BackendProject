@@ -12,9 +12,8 @@ const config = {
   secret: process.env.SECRET,
   emailUser: process.env.EMAIL_USER,
   emailPassword: process.env.EMAIL_PASSWORD,
-  environment: process.env.NODE_ENV
+  environment: process.env.NODE_ENV,
+  port: process.env.PORT, 
 };
 
 export default config;
-
-

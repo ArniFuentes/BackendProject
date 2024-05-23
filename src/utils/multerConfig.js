@@ -28,8 +28,8 @@ const storage = multer.diskStorage({
   
   filename: function (req, file, cb) {
     // Genera un nuevo nombre de archivo basado en el ID del usuario y el timestamp
-    const userId = req.params.uid; // ID del usuario
-    const timestamp = Date.now(); // Timestamp actual
+    const userId = req.params.uid;
+    const timestamp = Date.now();
     const filename = `${userId}_${timestamp}_${file.fieldname}.png`; // Nuevo nombre de archivo
     cb(null, filename);
   },
@@ -38,7 +38,3 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 export default upload;
-
-// filename: function (req, file, cb) {
-//   cb(null, file.originalname);
-// },

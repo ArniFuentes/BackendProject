@@ -1,125 +1,290 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #070101;
+    color: #fff;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #fff;
+    margin-left: 20px;
+}
+
 /* Estilos para posicionar el carrito en la parte derecha */
 .cart {
     position: fixed;
-    /* Lo coloca 50px desde el borde superior */
     top: 110px;
-    /* Lo coloca 20px desde el borde derecho */
     right: 20px;
     width: 250px;
     background-color: #f2f2f2;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    color: #000; /* Texto negro para mejor visibilidad */
 }
 
 .product-list {
-    /* Margen superior para separar la cuadrícula de productos del carro de compras */
     margin-top: 50px;
-    /* Margen izquierdo para separar del borde izquierdo de la página */
     margin-left: 300px;
-    /* Margen derecho para separar del borde derecho de la página */
     margin-right: 300px;
     display: grid;
-    /* Define la cuadrícula de productos */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    /* Espacio entre los productos */
     gap: 20px;
 }
 
-/* Estilos para posicionar el contenedor de botones de paginación*/
+/* Estilos para posicionar el contenedor de botones de paginación */
 .buttons-container {
-    /* Hace que el contenedor de botones sea fijo en la pantalla */
     position: fixed;
-    /* Distancia desde el borde inferior de la pantalla */
     bottom: 20px;
-    /* Centra horizontalmente el contenedor */
     left: 50%;
-    /* Centra el contenedor horizontalmente */
     transform: translateX(-50%);
-    /* Centra los botones dentro del contenedor */
     text-align: center;
-    /* Asegura que el contenedor esté sobre otros elementos */
     z-index: 1000;
 }
 
-/* Espaciado horizontal entre los botones de paginado*/
+/* Espaciado horizontal entre los botones de paginado */
 .buttons-container button {
     margin: 5px;
 }
 
 /* Estilos para resaltar los productos */
 .product {
-    /* Fondo blanco para cada producto */
     background-color: #fff;
-    /* Borde delgado alrededor de cada producto */
     border: 1px solid #ccc;
-    /* Bordes redondeados */
     border-radius: 5px;
-    /* Sombra suave alrededor de cada producto */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    /* Espaciado interno para el contenido del producto */
     padding: 20px;
-
+    position: relative;
+    color: #000; /* Texto negro para mejor visibilidad */
 }
 
-.product {
-    /* Asegura que el div tenga una posición relativa */
-    position: relative;
+.product h3 {
+    margin-bottom: 90px;
+}
+
+.product p {
+    text-align: left;
+    margin-right: 10px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: 2;
 }
 
 .product button {
-    /* Posiciona el botón de manera absoluta */
     position: absolute;
-    /* Coloca el botón en la parte inferior del div */
     bottom: 10px;
-    /* Centra horizontalmente el botón dentro del div */
     left: 50%;
     transform: translateX(-50%);
 }
 
-.product p {
-    /* Alinea el texto a la izquierda */
-    text-align: left;
-    /* Establece un margen derecho para separarlo del botón */
-    margin-right: 10px;
-    /* Puedes ajustar este valor según sea necesario */
-
-    /* Posiciona la etiqueta p con posición absoluta */
-    position: absolute;
-    /* Alinea la etiqueta p con la parte superior del botón */
-    top: calc(50% - 20px);
-    /* Ajusta este valor para cambiar la posición vertical */
-    /* Alinea la etiqueta p con el borde izquierdo del contenedor de productos */
-    left: 2;
-}
-
-.product h3 {
-    /* Agrega un margen inferior para separarlo del precio */
-    margin-bottom: 90px;
-}
-
+/* Estilos para el botón de inicio de sesión */
 .login-button {
-    /* Lo posiciona fijo en la pantalla */
     position: fixed;
-    /* Lo coloca 20px desde el borde superior */
     top: 20px;
-    /* Lo coloca 20px desde el borde derecho */
-    right: 20px;
-    /* Color de fondo */
-    background-color: #14181c;
-    /* Color del texto */
-    color: #fff;
-    /* Sin borde */
-    border: none;
-    /* Espaciado interno */
+    right: 120px;
+    background-color: #000;
+    color: #15e019;
+    border: 2px solid #15e019;
     padding: 10px 20px;
-    /* Bordes redondeados */
     border-radius: 5px;
-    /* Cambia el cursor al pasar por encima */
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .login-button:hover {
-    /* Cambia el color de fondo al pasar por encima */
-    background-color: #323d49;
+    background-color: #15e019;
+    color: #fff;
 }
+
+/* Estilos para el botón de registro de usuario */
+.signup-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #000;
+    color: #15e019;
+    border: 2px solid #15e019;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.signup-button:hover {
+    background-color: #15e019;
+    color: #fff;
+}
+
+/* Estilos para los elementos con la clase .product */
+.product {
+    background-color: #15e019;
+    color: #050505; /* Texto negro */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para los botones con la clase .productButton */
+.productButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.productButton:hover {
+    background-color: #fff;
+    color: #000;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #070101;
+    color: #fff; /* texto visible en el fondo oscuro */
+}
+
+h1 {
+    margin-top: 20px;
+    color: #fff;
+    margin-left: 20px;
+}
+
+/* Estilos para posicionar el carrito en la parte derecha */
+.cart {
+    position: fixed;
+    top: 110px;
+    right: 20px;
+    width: 250px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #000; /* Texto negro para mejor visibilidad */
+}
+
+.product-list {
+    margin-top: 50px;
+    margin-left: 300px;
+    margin-right: 300px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Estilos para posicionar el contenedor de botones de paginación */
+.buttons-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+/* Espaciado horizontal entre los botones de paginado */
+.buttons-container button {
+    margin: 5px;
+}
+
+/* Estilos para resaltar los productos */
+.product {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+    color: #000; /* Texto negro para mejor visibilidad */
+}
+
+.product h3 {
+    margin-bottom: 90px;
+}
+
+.product p {
+    text-align: left;
+    margin-right: 10px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: 2;
+}
+
+.product button {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Estilos para el botón de inicio de sesión */
+.login-button {
+    position: fixed;
+    top: 20px;
+    right: 120px;
+    background-color: #000;
+    color: #15e019;
+    border: 2px solid #15e019;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-button:hover {
+    background-color: #15e019;
+    color: #fff;
+}
+
+/* Estilos para el botón de registro de usuario */
+.signup-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #000;
+    color: #15e019;
+    border: 2px solid #15e019;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.signup-button:hover {
+    background-color: #15e019;
+    color: #fff;
+}
+
+/* Estilos para los elementos con la clase .product */
+.product {
+    background-color: #15e019;
+    color: #050505; /* Texto negro */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para los botones con la clase .productButton */
+.productButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.productButton:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+  
+  
+  

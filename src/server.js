@@ -49,7 +49,7 @@ app.use(passport.initialize());
 app.engine("handlebars", handlebars.engine());
 app.set("views", process.cwd() + "/src/views"); // Ruta de las plantillas
 
-app.use(express.urlencoded({ extended: true })); // Para pasar a objeto lo que venga de formulario
+app.use(express.urlencoded({ extended: true })); // Para pasar a objeto lo que venga de formularios
 
 router(app);
 app.use(errorMiddleware);

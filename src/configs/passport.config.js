@@ -4,7 +4,7 @@ import local from "passport-local";
 import GithubStrategy from "passport-github2";
 import config from "./config.js";
 import extractJwtCookie from "../utils/extract-jwt-cookie.util.js";
-import Users from "../models/user.model.js";
+import User from "../models/user.model.js";
 import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
 
 const JwtStrategy = jwt.Strategy;
@@ -34,9 +34,8 @@ const initializePassport = () => {
   passport.use(
     "register", // Nombre a elección
     new LocalStrategy(
-      // El username en este caso será la propíedad email de req.body
+      // EEn este caso se espera la propíedad email de req.body
       { passReqToCallback: true, usernameField: "email" },
-      // Segundo argumento. username recibe un email (usernameField: "email")
       async (req, username, password, done) => {
         try {
           const { first_name, last_name, email } = req.body;
@@ -50,14 +49,13 @@ const initializePassport = () => {
             );
           }
 
-          const user = await Users.findOne({ email: username });
+          const user = await User.findOne({ email: username });
 
-          // Si existe el usuario
           if (user) {
             return done(null, false); // Rompe la ejecución
           }
 
-          // Si es un nuevo usuario crearlo
+          // Si es un nuevo usuario, crearlo
           const newUserInfo = {
             first_name,
             last_name,
@@ -66,7 +64,7 @@ const initializePassport = () => {
           };
 
           // Crear el usuario en mongo
-          const newUser = await Users.create(newUserInfo);
+          const newUser = await User.create(newUserInfo);
           return done(null, newUser);
         } catch (error) {
           return done(error);
@@ -85,20 +83,19 @@ const initializePassport = () => {
       async (username, password, done) => {
         try {
           // Buscar el usuario en la base de datos utilizando el correo electrónico
-          const user = await Users.findOne({ email: username });
+          const user = await User.findOne({ email: username });
 
           if (!user) {
             console.log("Usuario no existe");
-            return done(null, false);
+            return done(null, false);  // Usuario no encontrado, devolver falso
           }
 
           if (!useValidPassword(user, password)) {
             console.log("Password no hace match");
-            //  no hubo errores durante la autenticación (null) y no se encontró ningún usuario autenticado (false)
-            done(null, false);
+            return done(null, false);  // Contraseña incorrecta, devolver falso
           }
 
-          // Si la autenticación es exitosa, pasar los datos del usuario autenticado como segundo argumento
+          // Si el usuario y la contraseña son válidos, devolver el usuario autenticado y pasar a la callback
           return done(null, user);
         } catch (error) {
           done(error);
@@ -116,12 +113,12 @@ const initializePassport = () => {
         clientSecret: config.ghClientSecret,
         callbackURL: "http://localhost:8080/auth/githubcallback",
       },
-      // Info obtenida desde github (la info del profile se guarda en la base)
+      // profile tiene la información obtenida desde github (sirve para crear el usuario en mi base)
       async (accessToken, RefreshToken, profile, done) => {
         try {
           const { id, login, name, email } = profile._json;
 
-          const user = await Users.findOne({ email: email });
+          const user = await User.findOne({ email: email });
 
           if (!user) {
             const newUserInfo = {
@@ -130,7 +127,8 @@ const initializePassport = () => {
               githubId: id,
               githubUsername: login,
             };
-            const newUser = await Users.create(newUserInfo);
+            const newUser = await User.create(newUserInfo);
+            
             return done(null, newUser);
           }
 

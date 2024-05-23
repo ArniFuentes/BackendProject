@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Nombre de la colección
 const messageCollection = "message";
 
 const messageSchema = new mongoose.Schema({

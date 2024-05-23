@@ -1,39 +1,51 @@
-const form = document.getElementById("loginForm");
+document.addEventListener("DOMContentLoaded", (event) => {
+  const form = document.getElementById("loginForm");
 
-// Ejecutar la callback cuando se envíe el formulario
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const data = new FormData(form);
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const obj = {};
 
-  const obj = {};
+      data.forEach((value, key) => (obj[key] = value));
 
-  data.forEach((value, key) => (obj[key] = value));
+      const fetchParams = {
+        url: "/auth/login",
+        headers: { "Content-type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(obj),
+      };
 
-  const fetchParams = {
-    url: "/auth/login",
-    headers: { "Content-type": "application/json" },
-    method: "POST",
-    body: JSON.stringify(obj),
-  };
+      try {
+        await fetch(fetchParams.url, {
+          headers: fetchParams.headers,
+          method: fetchParams.method,
+          body: fetchParams.body,
+        });
 
-  try {
-    await fetch(fetchParams.url, {
-      headers: fetchParams.headers,
-      method: fetchParams.method,
-      body: fetchParams.body,
+        const cartId = localStorage.getItem("cartId");
+        const response = await fetch(`/api/carts/${cartId}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          const response = await fetch("/api/carts", { method: "POST" });
+          const data = await response.json();
+          const cartId = data.cart.id;
+
+          localStorage.setItem("cartId", cartId);
+        }
+        window.location.href = "index.html";
+      } catch (error) {
+        console.log(error);
+      }
     });
 
-    // Llamada al endpoint de creación de carritos
-    const cartResponse = await fetch("/api/carts", { method: "POST" });
-
-    const cartData = await cartResponse.json();
-    const cartId = cartData.cart._id;
-
-    // Guardar el ID del carrito en el almacenamiento local
-    localStorage.setItem("cartId", cartId);
-
-    window.location.href = "index.html";
-  } catch (error) {
-    console.log(error);
+    document
+      .getElementById("forgotPasswordLink")
+      .addEventListener("click", (event) => {
+        event.preventDefault();
+        window.location.href = "/forgotPassword.html";
+      });
   }
 });

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="css/login.css" />
   </head>
   <body>
     <h2>Login</h2>
@@ -21,14 +22,11 @@
     <br />
     <br />
 
-    <!-- Enlace para Restaurar Contraseña -->
-    <a href="#" id="forgotPasswordLink">Restaurar Contraseña</a>
-
-    <a href="/auth/github">Entrar con Github</a>
-
-    <!-- Vincular el archivo JavaScript para la restauración de contraseña -->
-    <script src="/js/forgotPassword.js"></script>
-    <!-- Vincular el archivo JavaScript para el login -->
+    <div class="link-container">
+      <a href="#" id="forgotPasswordLink">Restaurar Contraseña</a>
+      <a href="/auth/github" id="githubLoginLink">Iniciar sesión con GitHub</a>
+    </div>
+    
     <script src="/js/login.js"></script>
   </body>
 </html>

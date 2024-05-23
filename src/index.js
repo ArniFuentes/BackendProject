@@ -1,11 +1,12 @@
 import getLogger from "./utils/winston/factory.js";
 import app from "./server.js";
 import { Server } from "socket.io";
+import config from "./configs/config.js";
 
 const chats = [];
-
-const httpServer = app.listen(8080, () => {
-  getLogger.info("Server running at http://localhost:8080/");
+const PORT = config.port;
+const httpServer = app.listen(PORT, () => {
+  getLogger.info(`Server running at http://localhost:${PORT}/`);
 });
 
 // asignar el servidor de socket a io

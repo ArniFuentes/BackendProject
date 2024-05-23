@@ -1,6 +1,6 @@
 const form = document.getElementById("signupForm");
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const data = new FormData(form);
@@ -10,7 +10,6 @@ form.addEventListener("submit", (e) => {
   data.forEach((value, key) => (obj[key] = value));
 
   const fetchParams = {
-    // Ruta a donde va el fetch
     url: "api/users",
     headers: {
       "Content-type": "application/json",
@@ -19,12 +18,20 @@ form.addEventListener("submit", (e) => {
     body: JSON.stringify(obj),
   };
 
-  fetch(fetchParams.url, {
-    headers: fetchParams.headers,
-    method: fetchParams.method,
-    body: fetchParams.body,
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
+  try {
+    const response = await fetch(fetchParams.url, {
+      headers: fetchParams.headers,
+      method: fetchParams.method,
+      body: fetchParams.body,
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    window.location.href = "index.html";
+
+  } catch (error) {
+    console.log(error);
+  }
 });

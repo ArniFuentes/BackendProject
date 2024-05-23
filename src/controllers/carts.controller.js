@@ -1,14 +1,9 @@
 import { Router } from "express";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 import cartsService from "../services/carts.service.js";
-// import productsService from "../services/products.service.mjs";
 import passport from "passport";
 import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 import CartDTO from "../DTOs/cart.dto.js";
-import CartValidatorDTO from "../DTOs/cart-validator.dto.js";
-import CartQuantityValidatorDTO from "../DTOs/cart-quantity-validator.dto.js";
-// import CustomError from "../handlers/errors/customError.mjs";
-// import errorDictionary from "../handlers/errors/error-diccionary.mjs";
 
 const router = Router();
 
@@ -20,7 +15,8 @@ router.post(
     try {
       const userId = req.user.id; // Obtener el ID del usuario autenticado
       const newCart = await cartsService.insertOne(userId); // Pasar el ID del usuario al servicio
-      res.status(HTTP_RESPONSES.CREATED).json({ cart: newCart });
+      const DtoCreatedCart = new CartDTO(newCart);
+      res.status(HTTP_RESPONSES.CREATED).json({ cart: DtoCreatedCart });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -32,10 +28,8 @@ router.get("/:cid", async (req, res) => {
   try {
     const cartId = req.params.cid;
     const cart = await cartsService.getCartById(cartId);
-    console.log(cart);
-    // const cartDTO = new CartDTO(cart);
-
-    res.status(200).json({ cart: cart }); // Enviar el DTO como respuesta al cliente
+    const cartDTO = new CartDTO(cart);
+    res.status(200).json({ cart: cartDTO });
   } catch (error) {
     res.status(400).json({ status: "error", error });
   }
@@ -47,7 +41,7 @@ router.post(
   // Presentar las credenciales presentes en el token a la api
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["user", "premium"]),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
@@ -63,7 +57,6 @@ router.post(
         .json({ message: "Producto agregado al carrito exitosamente." });
     } catch (error) {
       res.status(401).json({ message: error.message });
-      // next(error); // Pasa el error al middleware de manejo de errores
     }
   }
 );
@@ -92,10 +85,10 @@ router.delete("/:cid", async (req, res) => {
     const cartId = req.params.cid;
 
     await cartsService.removeAllProductsFromCart(cartId);
+    const emptyCart = await cartsService.getCartById(cartId);
+    const emptyCartDTO = new CartDTO(emptyCart);
 
-    res
-      .status(HTTP_RESPONSES.DELETED)
-      .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
+    res.status(200).json({ cart: emptyCartDTO });
   } catch (error) {
     req.logger.error(
       "Error al eliminar todos los productos del carrito:",
@@ -107,23 +100,18 @@ router.delete("/:cid", async (req, res) => {
   }
 });
 
-// Actualizar el carrito con un arreglo de productos {"products": [{"product": "ID_producto", "quantity": 3}]}
 router.put("/:cid", async (req, res) => {
   try {
     const cartId = req.params.cid;
+    const productsData = req.body;
 
-    // Utilizar el DTO para estructurar y validar los datos del cuerpo de la solicitud
-    const cartValidatorDTO = new CartValidatorDTO(req.body);
+    const updatedCart = await cartsService.updateCartProducts(
+      cartId,
+      productsData
+    );
+    const cartDto = new CartDTO(updatedCart);
 
-    // Obtener el carrito por su ID
-    const cart = await cartsService.getCartById(cartId);
-
-    // Actualizar los productos del carrito con el nuevo arreglo
-    cart.products = cartValidatorDTO.products;
-
-    // Guardar el carrito actualizado en la base de datos
-    await cartsService.updateCart(cartId, cart);
-    res.status(200).json({ status: "success", cart });
+    res.status(200).json({ status: "success", cart: cartDto });
   } catch (error) {
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
@@ -131,19 +119,13 @@ router.put("/:cid", async (req, res) => {
   }
 });
 
-// actualizar la cantidad de ejemplares del producto pasada desde req.body
+// Actualizar la cantidad de ejemplares del producto
 router.put("/:cid/products/:pid", async (req, res) => {
   try {
     const cartId = req.params.cid;
     const productId = req.params.pid;
+    const newQuantity = req.body.quantity;
 
-    // Utilizar el DTO para manejar la validación de la cantidad
-    const cartQuantityValidatorDTO = new CartQuantityValidatorDTO(req.body);
-    cartQuantityValidatorDTO.validate();
-
-    const newQuantity = cartQuantityValidatorDTO.quantity;
-
-    // Llamar al servicio para validar y actualizar la cantidad del producto en el carrito
     await cartsService.updateProductQuantityInCart(
       cartId,
       productId,
@@ -166,7 +148,6 @@ router.post(
   async (req, res) => {
     // identificar el carrito que se está comprando
     const cartId = req.params.cid;
-
     try {
       const result = await cartsService.purchaseCart(cartId);
       res.status(200).json(result);

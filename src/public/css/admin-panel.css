@@ -1,0 +1,52 @@
+/* Estilo para el cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Estilo para el título principal */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para la tabla de usuarios */
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin: 0 auto; /* Centrar la tabla horizontalmente */
+}
+
+/* Estilo para las celdas de la tabla */
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Estilo para las celdas de encabezado de la tabla */
+th {
+    background-color: #f2f2f2;
+}
+
+/* Estilo para los botones */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+/* Estilo para el botón eliminar */
+button.delete {
+    background-color: #f44336;
+}
+
+/* Estilo para los botones al pasar el cursor por encima */
+button:hover {
+    opacity: 0.8;
+}

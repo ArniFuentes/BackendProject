@@ -24,7 +24,10 @@ const userSchema = new mongoose.Schema({
       reference: String,
     },
   ],
-  last_connection: Date,
+  last_connection: {
+    type: Date,
+    default: Date.now, 
+  },
 });
 
 const User = mongoose.model(userCollection, userSchema);

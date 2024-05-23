@@ -1,25 +1,20 @@
 import { Router } from "express";
 import passport from "passport";
-import usersService from "../services/users.service.js";
+import userService from "../services/users.service.js";
 import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
-import transport from "../utils/nodemailer.util.js";
-import config from "../configs/config.js";
-import upload from "../utils/multerConfig.js"; // Importa el middleware de Multer
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
+import upload from "../utils/multerConfig.js";
 
 const router = Router();
 
+// Obtener los usuarios
 router.get(
   "/",
-  // Validar las credenciales
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["admin"]),
   async (req, res) => {
     try {
-      const users = await usersService.getAll();
-      res.json({ message: users });
+      const filteredUsersDTO = await userService.findUsersExcludingAdmin();
+      res.status(200).json({ message: filteredUsersDTO });
     } catch (error) {
       req.logger.error(error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -29,13 +24,12 @@ router.get(
 
 router.get(
   "/:uid",
-  // Validar las credenciales
   passport.authenticate("current", { session: false }),
   async (req, res) => {
     try {
       const { uid } = req.params;
-      const user = await usersService.getOne(uid);
-      res.json({ message: user });
+      const user = await userService.findOne(uid);
+      res.status(200).json({ message: user });
     } catch (error) {
       req.logger.error(error);
       res.status(500).json({ error });
@@ -43,23 +37,14 @@ router.get(
   }
 );
 
+// Registrar un nuevo usuario
 router.post(
   "/",
   passport.authenticate("register", { session: false }),
   async (req, res) => {
     try {
-      // Se creó el recurso en la base de datos
-      res.status(201).json({ status: "success", message: "registered user" });
-
-      // Enviar el correo electrónico
-      const mailOptions = {
-        from: config.emailUser,
-        to: req.body.email, // Tomar el correo del usuario registrado
-        subject: "Registro exitoso!!",
-        html: "<h1>¡Gracias por registrarte!</h1>",
-      };
-
-      await transport.sendMail(mailOptions);
+      res.status(201).json({ status: "success", message: "User registered" });
+      await userService.sendRegistrationEmail(req.body.email);
     } catch (error) {
       req.logger.error(error);
       res.status(500).json({ status: "Error", error: "Internal Server Error" });
@@ -67,99 +52,23 @@ router.post(
   }
 );
 
-// // Definir la ruta para cambiar el rol de un usuario
-// router.put(
-//   "/premium/:uid",
-//   passport.authenticate("current", { session: false }),
-//   // solo los usuarios con roles de "user" y "premium" podrían acceder a la ruta
-//   authRoleMiddleware(["user", "premium"]),
-//   async (req, res, next) => {
-//     try {
-//       const userId = req.params.uid;
-
-//       // Llamar al servicio para cambiar el rol del usuario
-//       await usersService.toggleUserRole(userId);
-
-//       res
-//         .status(200)
-//         .json({ message: "Rol de usuario actualizado exitosamente." });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// );
-
-// Definir la ruta para cambiar el rol de un usuario a premium
+// Cambiar el rol de un usuario, de “user” a “premium” y viceversa
 router.put(
   "/premium/:uid",
   passport.authenticate("current", { session: false }),
-  // solo los usuarios con roles de "user" y "premium" podrían acceder a la ruta
-  authRoleMiddleware(["user", "premium"]),
+  authRoleMiddleware(["admin"]),
   async (req, res) => {
     try {
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
       const userId = req.params.uid;
 
-      // Ruta a la carpeta documents
-      const directorio = path.join(
-        __dirname,
-        "..",
-        "public",
-        "uploads",
-        "documents"
-      );
+      await userService.verifyUserDocuments(userId);
+      await userService.changeRole(userId);
 
-      fs.readdir(directorio, async (err, archivos) => {
-        if (err) {
-          console.error("Error al leer la carpeta:", err);
-          return;
-        }
-
-        // Filtra los archivos para obtener solo los que contienen el ID del usuario en el nombre
-        const userFiles = archivos.filter((file) => file.includes(userId));
-
-        // Obtiene los nombres de los archivos
-        const fileNames = userFiles.map((file) => {
-          // Encontrar la posición del segundo guion bajo '_'
-          const primerGuionBajoIndex = file.indexOf("_");
-          const segundoGuionBajoIndex = file.indexOf(
-            "_",
-            primerGuionBajoIndex + 1
-          );
-
-          const namePlusExtensionList = file.substring(
-            segundoGuionBajoIndex + 1
-          );
-          const nameWithoutExtension = namePlusExtensionList.slice(0, -4);
-          return nameWithoutExtension;
-        });
-
-        // Verificar si el usuario ha cargado todos los documentos necesarios
-        const requiredDocuments = [
-          "identification",
-          "proof_of_address",
-          "bank_statement",
-        ];
-
-        const hasAllRequiredDocuments = requiredDocuments.every((doc) =>
-          fileNames.includes(doc)
-        );
-
-        if (!hasAllRequiredDocuments) {
-          return res.status(400).json({
-            error: "No ha cargado todos los documentos necesarios.",
-          });
-        }
-        // Llamar al servicio para cambiar el rol del usuario
-        await usersService.toggleUserRole(userId);
-        res
-          .status(200)
-          .json({ message: "Rol de usuario actualizado exitosamente." });
-      });
+      res
+        .status(200)
+        .json({ message: "Rol de usuario actualizado exitosamente." });
     } catch (error) {
-      // next(error);
-      console.log(error);
+      res.status(400).json({ error: error.message });
     }
   }
 );
@@ -177,5 +86,31 @@ router.post(
     }
   }
 );
+
+// Quitar los usuarios que no hayan tenido conexión en los últimos 2 días
+router.delete("/", async (req, res) => {
+  try {
+    const inactiveUsers = await userService.getInactiveUsers();
+
+    for (const user of inactiveUsers) {
+      await userService.deleteOne(user._id);
+      await userService.sendInactiveUserEmail(user.email);
+    }
+
+    res
+      .status(200)
+      .json({ message: "Usuarios inactivos eliminados correctamente" });
+  } catch (error) {
+    req.logger.error(error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+router.delete("/:uid", async (req, res) => {
+  try {
+    await userService.deleteOne(req.params.uid);
+    res.status(200).json({ message: "Usuario eliminado correctamente" });
+  } catch (error) {}
+});
 
 export default router;

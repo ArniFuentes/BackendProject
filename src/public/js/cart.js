@@ -1,26 +1,26 @@
 const cartId = localStorage.getItem("cartId");
+console.log(cartId);
 
 // Función para mostrar los productos del carrito
 async function showCartProducts(cartId) {
   try {
     const response = await fetch(`/api/carts/${cartId}`, { method: "GET" });
-    const cartData = await response.json();
+    const data = await response.json();
 
-    const addedProducts = cartData.cart.products;
+    const productsArray = data.cart.products;
 
     const table = document.getElementById("miTabla");
     const tbody = table.getElementsByTagName("tbody")[0];
     tbody.innerHTML = ""; // Limpiamos la lista antes de agregar nuevos productos al carrito
 
     let counter = 0;
-    addedProducts.forEach((cartItem) => {
-      const product = cartItem.product;
-      counter += product.price * cartItem.quantity;
+    productsArray.forEach((cartItem) => {
+      counter += cartItem.price * cartItem.quantity;
       let row = "<tr>";
-      row += `<td>${product.title}</td>`;
-      row += `<td><input type="number" id="quantity_${product._id}" value="${cartItem.quantity}" onchange="actualizarCantidad('${cartId}', '${product._id}')"></td>`;
-      row += `<td>$${(product.price * cartItem.quantity).toFixed(2)}</td>`;
-      row += `<td><button onclick="eliminarProducto('${cartId}', '${product._id}')">Eliminar</button></td>`;
+      row += `<td>${cartItem.title}</td>`;
+      row += `<td><input type="number" id="quantity_${cartItem.productId}" value="${cartItem.quantity}" onchange="actualizarCantidad('${cartId}', '${cartItem.productId}')"></td>`;
+      row += `<td>$${(cartItem.price * cartItem.quantity).toFixed(2)}</td>`;
+      row += `<td><button onclick="eliminarProducto('${cartId}', '${cartItem.productId}')">Eliminar</button></td>`;
       row += "</tr>";
       tbody.innerHTML += row;
     });
@@ -69,6 +69,8 @@ async function actualizarCantidad(cartId, productId) {
 // Función para eliminar un producto del carrito
 async function eliminarProducto(cartId, productId) {
   try {
+    console.log(cartId);
+    console.log(productId);
     const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
       method: "DELETE",
     });

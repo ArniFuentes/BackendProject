@@ -1,54 +1,46 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const resetPasswordForm = document.getElementById("resetPasswordForm");
-  if (resetPasswordForm) {
-    resetPasswordForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
+const form = document.getElementById("resetPasswordForm");
 
-      const formData = new FormData(resetPasswordForm);
-      const password = formData.get("password");
-      const confirmPassword = formData.get("confirmPassword");
+form.addEventListener("submit", async (event) => {
+  try {
+    event.preventDefault();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-      if (password !== confirmPassword) {
-        console.error("Passwords do not match");
-        return;
-      }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-      // Obtener el token de la URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-      console.log(token);
+    // Obtener el token de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
 
-      try {
-        const response = await fetch(`/auth/resetPassword/${token}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ password }),
-        });
-
-        if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(errorMessage);
-        }
-
-        const responseData = await response.json();
-
-        // Alertas según la respuesta de la API
-        if (responseData.message === "Password reset successfully") {
-          return alert("Password reset successfully");
-        }
-
-        if (responseData.message === "New password must be different") {
-          alert("New password must be different");
-        }
-
-        // // Redirigir al usuario a una página de éxito o inicio de sesión
-        // window.location.href = "/login.html";
-      } catch (error) {
-        // Redirigir a la vista que permita generar nuevamente el correo
-        window.location.href = "/forgotPassword.html";
-      }
+    const response = await fetch(`/auth/resetPassword/${token}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password }),
     });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+
+    // Alertas según la respuesta de la API
+    if (data.message === "Password reset successfully") {
+      alert("Password reset successfully");
+    }
+
+    if (data.message === "New password must be different") {
+      alert("New password must be different");
+    }
+
+    window.location.href = "/index.html";
+  } catch (error) {
+    window.location.href = "/forgotPassword.html";
   }
 });
