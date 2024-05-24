@@ -2,6 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import authService from "../services/auth.service.js";
 import usersService from "../services/users.service.js";
+import { getLogger } from "nodemailer/lib/shared/index.js";
 
 const router = Router();
 
@@ -76,7 +77,7 @@ router.post("/forgotPassword", async (req, res) => {
 
     res.status(201).json({ status: "Email sent" });
   } catch (error) {
-    console.error(error);
+    getLogger.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
@@ -90,7 +91,7 @@ router.post("/resetPassword/:token", async (req, res) => {
     const result = await authService.resetPassword(token, password);
     res.status(result.status).json({ message: result.message });
   } catch (error) {
-    console.error(error);
+    req.logger.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

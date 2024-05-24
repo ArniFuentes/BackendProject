@@ -111,7 +111,7 @@ const initializePassport = () => {
       {
         clientID: config.ghClientId,
         clientSecret: config.ghClientSecret,
-        callbackURL: "http://localhost:8080/auth/githubcallback",
+        callbackURL: `${config.base_url}/auth/githubcallback`,
       },
       // profile tiene la información obtenida desde github (sirve para crear el usuario en mi base)
       async (accessToken, RefreshToken, profile, done) => {

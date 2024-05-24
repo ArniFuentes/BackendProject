@@ -34,21 +34,6 @@ const addProductToCartIfNotExists = async (cartId, productId, userId) => {
     throw new Error("No tienes permiso para agregar productos a este carrito.");
   }
 
-  // await checkProductStock(productId, cartId);
-  // console.log(productId);
-  // const product = await productRepository.getProductById(productId);
-  // const productInCart = cart.products.find(
-  //   (item) => item.product._id.toString() === productId
-  // );
-  // if (productInCart) {
-  //   console.log(product.stock);
-  //   console.log(productInCart.quantity);
-  //   if (product.stock <= productInCart.quantity) {
-  //     console.log("en el if");
-  //     throw new Error("No hay suficiente stock del producto.");
-  //   }
-  // }
-
   // Verificar si el producto ya está en el carrito
   const productIndex = cart.products.findIndex(
     (item) => item.product._id.toString() === productId
@@ -149,7 +134,6 @@ const removeProductFromCart = async (cartId, productId) => {
     cart.products = cart.products.filter(
       (item) => item.product._id.toString() !== productId
     );
-    console.log(cart.products);
 
     // Guardar el carrito actualizado en la base de datos
     await cartRepository.updateCart(cartId, cart);

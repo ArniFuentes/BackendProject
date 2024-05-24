@@ -4,9 +4,8 @@ import { Server } from "socket.io";
 import config from "./configs/config.js";
 
 const chats = [];
-const PORT = config.port;
-const httpServer = app.listen(PORT, () => {
-  getLogger.info(`Server running at http://localhost:${PORT}/`);
+const httpServer = app.listen(config.port, () => {
+  getLogger.info(`Server running at ${config.base_url}`);
 });
 
 // asignar el servidor de socket a io

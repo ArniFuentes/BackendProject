@@ -4,6 +4,7 @@ import UserRepository from "../repositories/users.repository.js";
 import generateToken from "../utils/jwt.util.js";
 import transport from "../utils/nodemailer.util.js";
 import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
+import logger from "../utils/winston/factory.js";
 
 const userRepository = new UserRepository();
 
@@ -64,7 +65,7 @@ async function resetPassword(token, newPassword) {
 
     return { status: 200, message: "Password reset successfully" };
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return { status: 500, message: "Internal Server Error" };
   }
 }

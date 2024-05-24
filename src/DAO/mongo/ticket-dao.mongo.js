@@ -6,7 +6,6 @@ class TicketDAOMongo {
       const newTicket = await Ticket.create(ticketData);
       return newTicket;
     } catch (error) {
-      // console.error("Error creating ticket:", error);
       throw error;
     }
   }
