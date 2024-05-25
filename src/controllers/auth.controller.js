@@ -53,11 +53,10 @@ router.get(
       const token = authService.getToken(user);
 
       res.cookie("authToken", token, { httpOnly: true });
-      // .json({ message: "Logged" });
       res.redirect("/index.html");
     } catch (error) {
       req.logger.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.json({ message: error });
     }
   }
 );
@@ -73,7 +72,7 @@ router.post("/forgotPassword", async (req, res) => {
     }
 
     const token = authService.getToken(user);
-    await authService.sendResetPasswordEmail(user, token); 
+    await authService.sendResetPasswordEmail(user, token);
 
     res.status(201).json({ status: "Email sent" });
   } catch (error) {
