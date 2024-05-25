@@ -9,8 +9,7 @@ router.get(
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["user"]),
   (req, res) => {
-    // res.render("chat.handlebars");
-    res.json({ message: "Access granted", chatPage: "http://localhost:8080/chat.html" });
+    res.render("chat.handlebars");
   }
 );
 
