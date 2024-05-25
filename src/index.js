@@ -1,11 +1,11 @@
-import getLogger from "./utils/winston/factory.js";
+import logger from "./utils/winston/factory.js";
 import app from "./server.js";
 import { Server } from "socket.io";
 import config from "./configs/config.js";
 
 const chats = [];
 const httpServer = app.listen(config.port, () => {
-  getLogger.info(`Server running at ${config.port}`);
+  logger.info(`Server running at ${config.port}`);
 });
 
 // asignar el servidor de socket a io
