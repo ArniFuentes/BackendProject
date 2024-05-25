@@ -15,7 +15,6 @@ const router = (app) => {
   app.use("/auth", authController);
   app.use("/api/users", usersController);
   app.use("/mockingproducts", mockingController);
-  // Agrega el enrutador para probar los logs
   app.use("/loggerTest", loggerTestController);
 };
 

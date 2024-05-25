@@ -301,25 +301,6 @@ const updateCartProducts = async (cartId, productsData) => {
   }
 };
 
-// // Función para verificar el stock del producto
-// const checkProductStock = async (productId, cartId) => {
-//   const product = await productRepository.getProductById(productId);
-//   const cart = await cartRepository.getCartById(cartId);
-
-//   const productInCart = cart.products.find(
-//     (item) => item.product._id.toString() === productId
-//   );
-
-//   // if (!product) {
-//   //   throw new Error("Producto no encontrado.");
-//   // }
-//   if (!productInCart) {
-//     // No hacer nada
-//   } else if (product.stock <= productInCart.quantity) {
-//     throw new Error("No hay suficiente stock del producto.");
-//   }
-// };
-
 export default {
   validatePremiumUser,
   addProductToCartIfNotExists,

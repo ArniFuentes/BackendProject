@@ -65,14 +65,6 @@ const updateOne = async (productId, updatedProductInfo) => {
   }
 };
 
-// const deleteOne = async (productId) => {
-//   try {
-//     await productRepository.deleteProduct(productId);
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
 const deleteProduct = async (user, product) => {
   try {
     // El admin pueda borrar cualquier producto

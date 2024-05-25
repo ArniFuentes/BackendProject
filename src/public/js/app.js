@@ -1,12 +1,9 @@
-// const cartId = localStorage.getItem("cartId");
-
-const url = "http://localhost:8080/api/products";
 let currentPage = 1;
 
 // Mostrar los productos al ir a index.html
 async function getProducts(page) {
   try {
-    const response = await fetch(`${url}?page=${page}`, { method: "GET" });
+    const response = await fetch(`/api/products?page=${page}`, { method: "GET" });
     const data = await response.json();
     const products = data.payload.docs;
 
@@ -66,7 +63,7 @@ let totalPages;
 
 (async () => {
   try {
-    const response = await fetch(url);
+    const response = await fetch("/api/products");
     const jsonResponse = await response.json();
     totalPages = jsonResponse.payload.totalPages;
     getProducts(1);
