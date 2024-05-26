@@ -3,9 +3,6 @@ let currentPage = 1;
 // Mostrar los productos al ir a index.html
 async function getProducts(page) {
   try {
-    // Mostrar cargador antes de la llamada a la API
-    document.getElementById("loader").style.display = "block";
-
     const response = await fetch(`/api/products?page=${page}`, {
       method: "GET",
     });
@@ -25,15 +22,6 @@ async function getProducts(page) {
       `;
       // Guardar cada contenedor en el contenedor padre
       productList.appendChild(productDiv);
-    });
-
-    // Ocultar cargador después de cargar los productos
-    document.getElementById("loader").style.display = "none";
-
-    // Mostrar elementos ocultos
-    const hiddenElements = document.querySelectorAll("[style='display: none']");
-    hiddenElements.forEach((element) => {
-      element.style.display = "block";
     });
 
     // Actualizar el número de página actual

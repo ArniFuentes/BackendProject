@@ -5,38 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tienda</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/cargador.css" />
   </head>
   <body>
-    <h1 style="display: none" id="tienda">Tienda</h1>
-    <div id="loader" class="loader"></div>
+    <h1>Tienda</h1>
 
     <div id="productList" class="product-list"></div>
 
     <div class="buttons-container">
-      <button onclick="firstPage()" id="primera" style="display: none">Primera</button>
-      <button onclick="prevPage()" id="anterior" style="display: none">Anterior</button>
-      <button onclick="nextPage()" id="siguiente" style="display: none">Siguiente</button>
-      <button onclick="lastPage()" id="ultima" style="display: none">Última</button>
+      <button onclick="firstPage()">Primera</button>
+      <button onclick="prevPage()">Anterior</button>
+      <button onclick="nextPage()">Siguiente</button>
+      <button onclick="lastPage()">Última</button>
     </div>
 
-    <button
-      onclick="redirectToLogin()"
-      class="login-button"
-      style="display: none"
-    >
+    <button onclick="redirectToLogin()" class="login-button">
       Log in
     </button>
 
-    <button
-      onclick="redirectToSignup()"
-      class="signup-button"
-      style="display: none"
-    >
+    <button onclick="redirectToSignup()" class="signup-button">
       Sign up
     </button>
 
-    <div id="cart" class="cart" style="display: none">
+    <div id="cart" class="cart">
       <h2>Carrito de Compra</h2>
       <ul id="cartList"></ul>
       <button onclick="showAddedProducts()">Ver productos agregados</button>
