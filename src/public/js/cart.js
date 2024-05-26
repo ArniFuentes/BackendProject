@@ -1,8 +1,23 @@
 const cartId = localStorage.getItem("cartId");
-console.log(cartId);
+
+// Función para mostrar el cargador
+function showLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "block";
+}
+
+// Función para ocultar el cargador y mostrar el contenido
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "none";
+
+  const content = document.getElementById("content");
+  content.style.display = "block";
+}
 
 // Función para mostrar los productos del carrito
 async function showCartProducts(cartId) {
+  showLoader(); // Mostrar el cargador
   try {
     const response = await fetch(`/api/carts/${cartId}`, { method: "GET" });
     const data = await response.json();
@@ -11,7 +26,7 @@ async function showCartProducts(cartId) {
 
     const table = document.getElementById("miTabla");
     const tbody = table.getElementsByTagName("tbody")[0];
-    tbody.innerHTML = ""; // Limpiamos la lista antes de agregar nuevos productos al carrito
+    tbody.innerHTML = ""; // Limpiar la lista antes de agregar nuevos productos al carrito
 
     let counter = 0;
     productsArray.forEach((cartItem) => {
@@ -31,6 +46,8 @@ async function showCartProducts(cartId) {
     tbody.innerHTML += total;
   } catch (error) {
     console.error("Error al obtener los productos del carrito:", error);
+  } finally {
+    hideLoader(); // Ocultar el cargador y mostrar el contenido
   }
 }
 

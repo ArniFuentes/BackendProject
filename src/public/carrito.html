@@ -4,27 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carrito de Compra</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/carrito.css" />
+    <link rel="stylesheet" href="css/cargador.css" />
   </head>
   <body>
-    <h1>Carrito de Compra</h1>
+    <div id="loader"></div>
+    <div id="content" style="display: none">
+      <h1>Carrito de Compra</h1>
 
-    <!-- <ul id="cartList" class="cart-list"></ul> -->
-    <table id="miTabla" border="1">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Quantity</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+      <table id="miTabla" border="1">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-    <button onclick="comprarCarrito()">Pagar</button>
+      <div id="botones">
+        <button onclick="comprarCarrito()">Pagar</button>
 
-    <a href="index.html">Seguir Comprando</a>
-
+        <a href="index.html">Seguir Comprando</a>
+      </div>
+    </div>
     <script src="js/cart.js"></script>
   </body>
 </html>
