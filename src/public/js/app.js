@@ -1,15 +1,19 @@
 let currentPage = 1;
+let totalPages;
 
-// Mostrar los productos al ir a index.html
 async function getProducts(page) {
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+  const productList = document.getElementById("productList");
+  
+  loader.style.display = "block"; // Mostrar el cargador
+  content.style.display = "none"; // Ocultar el contenido
+
   try {
-    const response = await fetch(`/api/products?page=${page}`, {
-      method: "GET",
-    });
+    const response = await fetch(`/api/products?page=${page}`, { method: "GET" });
     const data = await response.json();
     const products = data.payload.docs;
 
-    const productList = document.getElementById("productList");
     productList.innerHTML = "";
 
     products.forEach((product) => {
@@ -20,49 +24,44 @@ async function getProducts(page) {
         <p>Precio: $${product.price}</p>
         <button class="productButton" onclick="addToCart('${product._id}')">Agregar al carrito</button>
       `;
-      // Guardar cada contenedor en el contenedor padre
       productList.appendChild(productDiv);
     });
 
-    // Actualizar el número de página actual
     currentPage = page;
   } catch (error) {
     console.error("Error al obtener los productos:", error);
+  } finally {
+    loader.style.display = "none"; // Ocultar el cargador
+    content.style.display = "block"; // Mostrar el contenido
   }
 }
 
-// Función para cargar la página siguiente
+// Funciones para navegación de página
 function nextPage() {
   if (currentPage < totalPages) {
     getProducts(currentPage + 1);
   }
 }
 
-// Función para cargar la página anterior
 function prevPage() {
   if (currentPage > 1) {
     getProducts(currentPage - 1);
   }
 }
 
-// Función para cargar la primera página
 function firstPage() {
   getProducts(1);
 }
 
-// Función para cargar la última página
 function lastPage() {
   getProducts(totalPages);
 }
 
-// Función para cargar una página específica
 function goToPage(page) {
   getProducts(page);
 }
 
-// Cargar la primera página al inicio
-let totalPages;
-
+// Inicializar la carga de productos
 (async () => {
   try {
     const response = await fetch("/api/products");
@@ -91,19 +90,13 @@ async function addToCart(productId) {
     });
 
     if (!response.ok) {
-      // Crear un carrito para el usuario autenticado
       const response = await fetch("/api/carts", { method: "POST" });
       const data = await response.json();
       const cartId = data.cart.id;
-      await fetch(`/api/carts/${cartId}/product/${productId}`, {
-        method: "POST",
-      });
-      // Guarda el cartId en localStorage
+      await fetch(`/api/carts/${cartId}/product/${productId}`, { method: "POST" });
       localStorage.setItem("cartId", cartId);
-      // return alert("Producto no se agregó al carro");
     }
 
-    // Muestra un mensaje de éxito con SweetAlert2
     Swal.fire({
       icon: "success",
       title: "Producto agregado al carrito",
