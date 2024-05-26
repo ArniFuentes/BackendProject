@@ -3,7 +3,12 @@ let currentPage = 1;
 // Mostrar los productos al ir a index.html
 async function getProducts(page) {
   try {
-    const response = await fetch(`/api/products?page=${page}`, { method: "GET" });
+    // Mostrar cargador antes de la llamada a la API
+    document.getElementById("loader").style.display = "block";
+
+    const response = await fetch(`/api/products?page=${page}`, {
+      method: "GET",
+    });
     const data = await response.json();
     const products = data.payload.docs;
 
@@ -20,6 +25,15 @@ async function getProducts(page) {
       `;
       // Guardar cada contenedor en el contenedor padre
       productList.appendChild(productDiv);
+    });
+
+    // Ocultar cargador después de cargar los productos
+    document.getElementById("loader").style.display = "none";
+
+    // Mostrar elementos ocultos
+    const hiddenElements = document.querySelectorAll("[style='display: none']");
+    hiddenElements.forEach((element) => {
+      element.style.display = "block";
     });
 
     // Actualizar el número de página actual
@@ -101,7 +115,13 @@ async function addToCart(productId) {
       // return alert("Producto no se agregó al carro");
     }
 
-    alert("Producto agregado al carrito exitosamente");
+    // Muestra un mensaje de éxito con SweetAlert2
+    Swal.fire({
+      icon: "success",
+      title: "Producto agregado al carrito",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   } catch (error) {
     console.error("Error en la solicitud al servidor:", error);
   }
@@ -110,4 +130,3 @@ async function addToCart(productId) {
 async function showAddedProducts() {
   window.location.href = "carrito.html";
 }
-

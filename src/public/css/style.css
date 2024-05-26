@@ -12,17 +12,58 @@ h1 {
     margin-left: 20px;
 }
 
-/* Estilos para posicionar el carrito en la parte derecha */
+/* Estilos para el carrito */
 .cart {
     position: fixed;
     top: 110px;
     right: 20px;
     width: 250px;
     background-color: #f2f2f2;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #000;
+    overflow-y: auto;
+    max-height: 80vh;
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.cart ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.cart li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    color: #000; /* Texto negro para mejor visibilidad */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cart button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #15e019;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cart button:hover {
+    background-color: #12c017;
 }
 
 .product-list {
@@ -177,7 +218,6 @@ h1 {
     gap: 20px;
 }
 
-/* Estilos para posicionar el contenedor de botones de paginación */
 .buttons-container {
     position: fixed;
     bottom: 20px;
@@ -185,23 +225,24 @@ h1 {
     transform: translateX(-50%);
     text-align: center;
     z-index: 1000;
+    display: flex; /* Utilizar un modelo de caja flexible para alinear los botones horizontalmente */
+    justify-content: center; /* Centrar los botones horizontalmente */
 }
 
-/* Estilos para los botones dentro del contenedor de paginación */
 .buttons-container button {
-    background-color: #000; /* Fondo negro */
-    color: #15e019; /* Texto verde */
-    border: 2px solid #15e019; /* Borde verde */
-    padding: 10px 20px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Indicador de clic */
-    transition: background-color 0.3s, color 0.3s; /* Transición suave para cambios de color */
-    margin: 5px; /* Espaciado horizontal entre los botones */
+    background-color: #000;
+    color: #15e019;
+    border: 2px solid #15e019;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 0 5px; /* Espaciado horizontal entre los botones */
 }
 
 .buttons-container button:hover {
-    background-color: #15e019; /* Fondo verde al pasar el cursor */
-    color: #fff; /* Texto blanco al pasar el cursor */
+    background-color: #15e019;
+    color: #fff;
 }
 
 /* Estilos para resaltar los productos */
@@ -296,7 +337,4 @@ h1 {
     background-color: #fff;
     color: #000;
 }
-
-  
-  
   

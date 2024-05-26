@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Confirmación de Compra</title>
+    <link rel="stylesheet" href="css/cargador.css" />
   </head>
   <body>
-    <h1>¡Compra Exitosa!</h1>
+    <h1 id="successMessage" style="display: none">¡Compra Exitosa!</h1>
+    <div id="loader"></div>
     <div id="ticketDetails">
       <h2>Detalles del Ticket de Compra</h2>
       <p><strong>Código:</strong> <span id="ticketCode"></span></p>
@@ -16,7 +18,11 @@
         <strong>Fecha de Compra:</strong> <span id="ticketPurchaseDate"></span>
       </p>
     </div>
-    <p><a href="index.html">Volver a la página principal</a></p>
+    <p>
+      <a href="index.html" id="backLink" style="display: none"
+        >Volver a la página principal</a
+      >
+    </p>
 
     <script src="js/confirmacion.js"></script>
   </body>
