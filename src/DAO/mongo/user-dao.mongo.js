@@ -25,8 +25,6 @@ class UserDAO {
   async deleteOne(id) {
     try {
       return await User.deleteOne({ _id: id });
-      // // Actualizar el campo status a false en lugar de eliminar el documento
-      // return await User.findByIdAndUpdate(id, { status: false }, { new: true });
     } catch (error) {
       throw error;
     }

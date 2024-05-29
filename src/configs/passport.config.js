@@ -43,16 +43,16 @@ const initializePassport = () => {
           // Verificar si first_name y last_name están presentes
           if (!first_name || !last_name) {
             return done(
-              null,  // no se debe a un error interno del servidor
-              false,  // credenciales proporcionados no son válidas
-              { message: "El nombre y apellido son obligatorios",}
+              null, // no se debe a un error interno del servidor
+              false, // credenciales proporcionados no son válidas
+              { message: "First and last name are required" }
             );
           }
 
           const user = await User.findOne({ email: username });
 
           if (user) {
-            return done(null, false); // Rompe la ejecución
+            return done(null, false, { message: "User already exists" }); // Rompe la ejecución
           }
 
           // Si es un nuevo usuario, crearlo
@@ -86,13 +86,11 @@ const initializePassport = () => {
           const user = await User.findOne({ email: username });
 
           if (!user) {
-            console.log("Usuario no existe");
-            return done(null, false);  // Usuario no encontrado, devolver falso
+            return done(null, false, { message: "User not found" }); // Usuario no encontrado, devolver falso
           }
 
           if (!useValidPassword(user, password)) {
-            console.log("Password no hace match");
-            return done(null, false);  // Contraseña incorrecta, devolver falso
+            return done(null, false, { message: "Incorrect password" }); // Contraseña incorrecta, devolver falso
           }
 
           // Si el usuario y la contraseña son válidos, devolver el usuario autenticado y pasar a la callback
@@ -128,7 +126,7 @@ const initializePassport = () => {
               githubUsername: login,
             };
             const newUser = await User.create(newUserInfo);
-            
+
             return done(null, newUser);
           }
 

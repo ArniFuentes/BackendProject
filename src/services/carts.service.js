@@ -189,7 +189,6 @@ const calculateTotalAmount = (products) => {
   try {
     // Iterar sobre el array de productos que se pueden comprar (stock > 0)
     for (const item of products) {
-      // Multiplicar el precio del producto por su cantidad y sumarlo al total
       total += item.product.price * item.quantity;
     }
     return total;

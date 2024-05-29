@@ -1,7 +1,5 @@
 import NewProductDto from "../DTOs/new-product.dto.js";
 import config from "../configs/config.js";
-// import CustomError from "../handlers/errors/customError.js";
-// import errorDictionary from "../handlers/errors/error-diccionary.js";
 import ProductRepository from "../repositories/product.repository.js";
 import transport from "../utils/nodemailer.util.js";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";

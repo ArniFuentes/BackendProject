@@ -102,7 +102,7 @@ router.post("/resetPassword/:token", async (req, res) => {
 router.get("/fail-login", (req, res) => {
   res
     .status(HTTP_RESPONSES.UNAUTHORIZED)
-    .json({ status: "error", error: HTTP_RESPONSES.UNAUTHORIZED_CONTENT });
+    .json({ error: HTTP_RESPONSES.UNAUTHORIZED_CONTENT });
 });
 
 export default router;
