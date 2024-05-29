@@ -4,6 +4,7 @@ import productsService from "../services/products.service.js";
 import NewProductDto from "../DTOs/new-product.dto.js";
 import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 import passport from "passport";
+import HttpError from "../utils/HttpError.js";
 
 const router = Router();
 
@@ -26,28 +27,30 @@ router.get("/", async (req, res) => {
       category,
       available
     );
-    res.status(200).json({ status: "success", payload: products });
+    res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT, payload: products });
   } catch (error) {
-    req.logger.error("Error al obtener productos:", error);
-    res
-      .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error: error });
+    res.status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR).json({
+      status: "error",
+      error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT,
+    });
   }
 });
 
 // Resporder un producto elegido
 router.get("/:pid", async (req, res) => {
   try {
-    // Obtener el parámetro 'pid' de la solicitud y convertirlo a un número entero.
     const productId = req.params.pid;
-    // Llamar a la función getOne con el productId y esperar la respuesta.
     const product = await productsService.getOne(productId);
-    res.json({ status: "success", payload: product });
+    res.json({ status: HTTP_RESPONSES.SUCCESS, payload: product });
   } catch (error) {
-    req.logger.error("Error al obtener productos:", error); // Registrar error en caso de excepción
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode)
+        .json({ status: "error", error: error.message });
+    }
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error });
+      .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
   }
 });
 
@@ -56,7 +59,7 @@ router.post(
   "/",
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["admin", "premium"]),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const newProductInfo = new NewProductDto(req.body);
       await productsService.validateRequiredFields(newProductInfo);
@@ -64,31 +67,43 @@ router.post(
       const newProduct = await productsService.insertOne(newProductInfo);
       res
         .status(HTTP_RESPONSES.CREATED)
-        .json({ status: "success", payload: newProduct });
+        .json({ status: HTTP_RESPONSES.CREATED_CONTENT, payload: newProduct });
     } catch (error) {
-      next(error);
+      if (error instanceof HttpError) {
+        return res
+          .status(error.statusCode)
+          .json({ status: "error", error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
 
-// Actualizar un producto 
+// Actualizar un producto
 router.put(
   "/:pid",
   passport.authenticate("current", { session: false }),
   authRoleMiddleware(["admin"]),
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const { pid } = req.params;
-
       const productInfo = await productsService.createProductDto(req.body);
       await productsService.validateRequiredFields(productInfo);
       await productsService.updateOne(pid, productInfo);
-
       res
         .status(HTTP_RESPONSES.UPDATED)
         .json({ status: HTTP_RESPONSES.UPDATE_SUCCESS });
     } catch (error) {
-      next(error);
+      if (error instanceof HttpError) {
+        return res
+          .status(error.statusCode)
+          .json({ status: "error", error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -104,13 +119,17 @@ router.delete(
       await productsService.deleteProduct(req.user, product);
 
       res
-        .status(200)
-        .json({ status: "El producto ha sido eliminado exitosamente." });
+        .status(HTTP_RESPONSES.DELETED)
+        .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
     } catch (error) {
-      req.logger.error("Error al eliminar un producto:", error);
+      if (error instanceof HttpError) {
+        return res
+          .status(error.statusCode)
+          .json({ status: "error", error: error.message });
+      }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-        .json({ status: "error", error });
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );

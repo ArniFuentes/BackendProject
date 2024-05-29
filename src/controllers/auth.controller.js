@@ -3,6 +3,8 @@ import passport from "passport";
 import authService from "../services/auth.service.js";
 import usersService from "../services/users.service.js";
 import { getLogger } from "nodemailer/lib/shared/index.js";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import HttpError from "../utils/HttpError.js";
 
 const router = Router();
 
@@ -16,20 +18,21 @@ router.post(
   async (req, res) => {
     try {
       const user = req.user;
-
       await authService.updateLastConnection(user);
-
       // Actualizar la última conexión y generar el token en el servicio
       const token = authService.getToken(user);
-
       res
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
     } catch (error) {
-      req.logger.error(error);
+      if (error instanceof HttpError) {
+        return res
+          .status(error.statusCode)
+          .json({ status: "error", error: error.message });
+      }
       res
-        .status(500)
-        .json({ status: "error", message: "Internal Server Error" });
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -55,8 +58,12 @@ router.get(
       res.cookie("authToken", token, { httpOnly: true });
       res.redirect("/index.html");
     } catch (error) {
-      req.logger.error(error);
-      res.json({ message: error });
+      if (error instanceof HttpError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -66,18 +73,11 @@ router.post("/forgotPassword", async (req, res) => {
   try {
     const { email } = req.body;
     const user = await usersService.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
     const token = authService.getToken(user);
     await authService.sendResetPasswordEmail(user, token);
-
-    res.status(201).json({ status: "Email sent" });
+    res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT });
   } catch (error) {
-    getLogger.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.status(error.statusCode).json({ error: error.message });
   }
 });
 
@@ -87,16 +87,22 @@ router.post("/resetPassword/:token", async (req, res) => {
     const token = req.params.token;
     const { password } = req.body;
 
-    const result = await authService.resetPassword(token, password);
-    res.status(result.status).json({ message: result.message });
+    await authService.resetPassword(token, password);
+    res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT });
   } catch (error) {
-    req.logger.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    if (error instanceof HttpError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+    res
+      .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+      .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
   }
 });
 
 router.get("/fail-login", (req, res) => {
-  res.json({ status: "error", error: "Login failed" });
+  res
+    .status(HTTP_RESPONSES.UNAUTHORIZED)
+    .json({ status: "error", error: HTTP_RESPONSES.UNAUTHORIZED_CONTENT });
 });
 
 export default router;

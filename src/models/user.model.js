@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["user", "admin", "premium"], // Roles
-    default: "user", // Rol por defecto
+    default: "user",
   },
   githubId: Number,
   documents: [
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
   ],
   last_connection: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
   },
 });
 

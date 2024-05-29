@@ -5,6 +5,8 @@ import generateToken from "../utils/jwt.util.js";
 import transport from "../utils/nodemailer.util.js";
 import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
 import logger from "../utils/winston/factory.js";
+import HttpError from "../utils/HttpError.js";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 
 const userRepository = new UserRepository();
 
@@ -16,7 +18,7 @@ const getToken = (user) => {
       email: user.email,
       role: user.role,
     };
-
+      
     const token = generateToken(tokenInfo);
     return token;
   } catch (error) {
@@ -30,7 +32,6 @@ const updateLastConnection = async (user) => {
 };
 
 const sendResetPasswordEmail = async (user, resetToken) => {
-  // Configurar el correo electrónico
   const mailOptions = {
     from: config.emailUser,
     to: user.email,
@@ -43,8 +44,11 @@ const sendResetPasswordEmail = async (user, resetToken) => {
     <p>Si no solicitaste restablecer tu contraseña, ignora este correo electrónico.</p>
   `,
   };
-
-  await transport.sendMail(mailOptions);
+  try {
+    await transport.sendMail(mailOptions);
+  } catch (error) {
+    throw error;
+  }
 };
 
 async function resetPassword(token, newPassword) {
@@ -53,20 +57,23 @@ async function resetPassword(token, newPassword) {
     const user = await userRepository.findOne({ _id: tokenCredentials.id });
 
     if (!user) {
-      return { status: 404, message: "User not found" };
+      throw new HttpError(
+        HTTP_RESPONSES.NOT_FOUND,
+        HTTP_RESPONSES.NOT_FOUND_CONTENT
+      );
     }
 
     if (useValidPassword(user, newPassword)) {
-      return { status: 400, message: "New password must be different" };
+      throw new HttpError(
+        HTTP_RESPONSES.BAD_REQUEST,
+        HTTP_RESPONSES.BAD_REQUEST_CONTENT
+      );
     }
 
     user.password = createHash(newPassword);
     await userRepository.save(user);
-
-    return { status: 200, message: "Password reset successfully" };
   } catch (error) {
-    logger.error(error);
-    return { status: 500, message: "Internal Server Error" };
+    throw error;
   }
 }
 

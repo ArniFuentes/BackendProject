@@ -1,9 +1,10 @@
 import NewProductDto from "../DTOs/new-product.dto.js";
 import config from "../configs/config.js";
-import CustomError from "../handlers/errors/customError.js";
-import errorDictionary from "../handlers/errors/error-diccionary.js";
+// import CustomError from "../handlers/errors/customError.js";
+// import errorDictionary from "../handlers/errors/error-diccionary.js";
 import ProductRepository from "../repositories/product.repository.js";
 import transport from "../utils/nodemailer.util.js";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 
 const productRepository = new ProductRepository();
 
@@ -37,11 +38,9 @@ const getAll = async (page, limit, sort, category, available) => {
 
 const getOne = async (productId) => {
   try {
-    // Llamar al nuevo método getProductById de la clase ProductDAOMongo
     const product = await productRepository.getProductById(productId);
     return product;
   } catch (error) {
-    // Lanzar cualquier error que ocurra durante el proceso.
     throw error;
   }
 };
@@ -112,11 +111,7 @@ const validateRequiredFields = async (newProductInfo) => {
 
     for (const field of requiredFields) {
       if (!newProductInfo[field]) {
-        CustomError.createError({
-          name: "ProductCreationError",
-          message: "Fields are missing",
-          code: errorDictionary.PRODUCT_CREATION_ERROR,
-        });
+        throw new Error(HTTP_RESPONSES.BAD_REQUEST_CONTENT);
       }
     }
   } catch (error) {

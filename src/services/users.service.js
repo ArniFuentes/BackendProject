@@ -7,6 +7,8 @@ import config from "../configs/config.js";
 import UserRepository from "../repositories/users.repository.js";
 import transport from "../utils/nodemailer.util.js";
 import UserDTO from "../DTOs/user.dto.js";
+import HttpError from "../utils/HttpError.js";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 
 const userRepository = new UserRepository();
 
@@ -57,7 +59,7 @@ export const changeRole = async (userId) => {
 
 const find = async () => {
   try {
-    return await userRepository.find();
+    await userRepository.find();
   } catch (error) {
     throw error;
   }
@@ -65,7 +67,14 @@ const find = async () => {
 
 const findOne = async (option) => {
   try {
-    return await userRepository.findOne(option);
+    const user = await userRepository.findOne(option);
+    if (!user) {
+      throw new HttpError(
+        HTTP_RESPONSES.BAD_REQUEST,
+        HTTP_RESPONSES.BAD_REQUEST_CONTENT
+      );
+    }
+    return user;
   } catch (error) {
     throw error;
   }

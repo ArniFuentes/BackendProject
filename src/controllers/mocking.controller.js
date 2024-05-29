@@ -12,7 +12,10 @@ router.get("/", (req, res) => {
   } catch (error) {
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
-      .json({ status: "error", error });
+      .json({
+        status: "error",
+        error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT,
+      });
   }
 });
 

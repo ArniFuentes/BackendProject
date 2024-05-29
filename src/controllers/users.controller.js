@@ -88,29 +88,42 @@ router.post(
 );
 
 // Quitar los usuarios que no hayan tenido conexión en los últimos 2 días
-router.delete("/", async (req, res) => {
-  try {
-    const inactiveUsers = await userService.getInactiveUsers();
+router.delete(
+  "/",
+  passport.authenticate("current", { session: false }),
+  authRoleMiddleware(["admin"]),
+  async (req, res) => {
+    try {
+      const inactiveUsers = await userService.getInactiveUsers();
 
-    for (const user of inactiveUsers) {
-      await userService.deleteOne(user._id);
-      await userService.sendInactiveUserEmail(user.email);
+      for (const user of inactiveUsers) {
+        await userService.deleteOne(user._id);
+        await userService.sendInactiveUserEmail(user.email);
+      }
+
+      res
+        .status(200)
+        .json({ message: "Usuarios inactivos eliminados correctamente" });
+    } catch (error) {
+      req.logger.error(error);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
-
-    res
-      .status(200)
-      .json({ message: "Usuarios inactivos eliminados correctamente" });
-  } catch (error) {
-    req.logger.error(error);
-    res.status(500).json({ error: "Error interno del servidor" });
   }
-});
+);
 
-router.delete("/:uid", async (req, res) => {
-  try {
-    await userService.deleteOne(req.params.uid);
-    res.status(200).json({ message: "Usuario eliminado correctamente" });
-  } catch (error) {}
-});
+router.delete(
+  "/:uid",
+  passport.authenticate("current", { session: false }),
+  authRoleMiddleware(["admin"]),
+  async (req, res) => {
+    try {
+      await userService.deleteOne(req.params.uid);
+      res.status(200).json({ message: "Usuario eliminado correctamente" });
+    } catch (error) {
+      req.logger.error(error);
+      res.status(500).json({ error });
+    }
+  }
+);
 
 export default router;

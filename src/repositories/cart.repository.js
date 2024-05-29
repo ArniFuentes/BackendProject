@@ -15,7 +15,8 @@ class CartRepository {
 
   async getCartById(cartId) {
     try {
-      return await this.cartDAO.getCartById(cartId);
+      const cart = await this.cartDAO.getCartById(cartId);
+      return cart;
     } catch (error) {
       throw error;
     }
