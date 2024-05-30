@@ -4,31 +4,30 @@ import UserRepository from "../repositories/users.repository.js";
 import generateToken from "../utils/jwt.util.js";
 import transport from "../utils/nodemailer.util.js";
 import { createHash, useValidPassword } from "../utils/bcrypt-password.util.js";
-import logger from "../utils/winston/factory.js";
 import HttpError from "../utils/HttpError.js";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 
 const userRepository = new UserRepository();
 
 const getToken = (user) => {
-  try {
-    const tokenInfo = {
-      id: user._id,
-      first_name: user.first_name,
-      email: user.email,
-      role: user.role,
-    };
-      
-    const token = generateToken(tokenInfo);
-    return token;
-  } catch (error) {
-    throw new Error("Error handling login");
-  }
+  const tokenInfo = {
+    id: user._id,
+    first_name: user.first_name,
+    email: user.email,
+    role: user.role,
+  };
+
+  const token = generateToken(tokenInfo);
+  return token;
 };
 
 const updateLastConnection = async (user) => {
-  user.last_connection = new Date();
-  await userRepository.save(user);
+  try {
+    user.last_connection = new Date();
+    await userRepository.save(user);
+  } catch (error) {
+    throw error;
+  }
 };
 
 const sendResetPasswordEmail = async (user, resetToken) => {

@@ -2,7 +2,6 @@ import { Router } from "express";
 import passport from "passport";
 import authService from "../services/auth.service.js";
 import usersService from "../services/users.service.js";
-import { getLogger } from "nodemailer/lib/shared/index.js";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 import HttpError from "../utils/HttpError.js";
 
@@ -19,7 +18,6 @@ router.post(
     try {
       const user = req.user;
       await authService.updateLastConnection(user);
-      // Actualizar la última conexión y generar el token en el servicio
       const token = authService.getToken(user);
       res
         .cookie("authToken", token, { httpOnly: true })
