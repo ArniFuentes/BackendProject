@@ -12,7 +12,7 @@ const ExtractJwt = jwt.ExtractJwt;
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
-  // decodifica el token para obtener la información del usuario incluida en él
+  // Decodifica el token JWT para obtener la información del usuario incluida
   passport.use(
     "current",
     new JwtStrategy(
@@ -20,9 +20,10 @@ const initializePassport = () => {
         jwtFromRequest: ExtractJwt.fromExtractors([extractJwtCookie]),
         secretOrKey: config.secret,
       },
-      // en credencials esta la información del usuario incluida en el token
+      // en credencials esta la información del usuario (incluida en el token)
       (credentials, done) => {
         try {
+        // Si no hay errores, llamar a done con null (sin error) y las credentials del usuario
           done(null, credentials);
         } catch (error) {
           done(error);

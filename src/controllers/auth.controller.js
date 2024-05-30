@@ -8,7 +8,7 @@ import HttpError from "../utils/HttpError.js";
 
 const router = Router();
 
-// Iniciar sesión
+// Iniciar sesión para obtener un token JWT válido 
 router.post(
   "/login",
   passport.authenticate("login", {
