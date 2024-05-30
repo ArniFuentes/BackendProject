@@ -11,11 +11,9 @@ router.get(
   passport.authenticate("current", { session: false }),
   (req, res) => {
     try {
-      req.logger.info(user);
       const currentUserDTO = new CurrentUserDTO(req.user);
-      res.status.json({ user: currentUserDTO });
+      res.json({ user: currentUserDTO });
     } catch (error) {
-      // req.logger.error(error);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({
