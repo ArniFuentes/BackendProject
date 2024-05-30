@@ -7,7 +7,7 @@ import HttpError from "../utils/HttpError.js";
 
 const router = Router();
 
-// Iniciar sesión para obtener un token JWT válido 
+// Iniciar sesión para obtener un token JWT válido
 router.post(
   "/login",
   passport.authenticate("login", {
@@ -23,11 +23,6 @@ router.post(
         .cookie("authToken", token, { httpOnly: true })
         .json({ message: "Logged" });
     } catch (error) {
-      if (error instanceof HttpError) {
-        return res
-          .status(error.statusCode)
-          .json({ status: "error", error: error.message });
-      }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -56,9 +51,6 @@ router.get(
       res.cookie("authToken", token, { httpOnly: true });
       res.redirect("/index.html");
     } catch (error) {
-      if (error instanceof HttpError) {
-        return res.status(error.statusCode).json({ error: error.message });
-      }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -75,7 +67,12 @@ router.post("/forgotPassword", async (req, res) => {
     await authService.sendResetPasswordEmail(user, token);
     res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT });
   } catch (error) {
-    res.status(error.statusCode).json({ error: error.message });
+    if (error instanceof HttpError) {
+      return res.status(error.statusCode).json({ error: error.message });
+    }
+    res
+      .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+      .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
   }
 });
 
