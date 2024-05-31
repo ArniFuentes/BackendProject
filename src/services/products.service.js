@@ -138,10 +138,6 @@ const assignProductOwner = async (user, newProductInfo) => {
   }
 };
 
-// const createProductDto = async (requestData) => {
-//   return new NewProductDto(requestData);
-// };
-
 const updateProduct = async (productId, productInfo) => {
   await productRepository.updateOne(productId, productInfo);
 };
@@ -155,6 +151,5 @@ export default {
   sendDeletedProductEmail,
   assignProductOwner,
   validateRequiredFields,
-  // createProductDto,
   updateProduct,
 };

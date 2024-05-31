@@ -3,6 +3,7 @@ import passport from "passport";
 import userService from "../services/users.service.js";
 import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 import upload from "../utils/multerConfig.js";
+import HTTP_RESPONSES from "../constants/http-responses.contant.js";
 
 const router = Router();
 
@@ -14,10 +15,11 @@ router.get(
   async (req, res) => {
     try {
       const filteredUsersDTO = await userService.findUsersExcludingAdmin();
-      res.status(200).json({ message: filteredUsersDTO });
+      res.json({ message: filteredUsersDTO });
     } catch (error) {
-      req.logger.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );

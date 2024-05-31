@@ -39,7 +39,8 @@ export const changeRole = async (userId) => {
     const user = await userRepository.findOne({ _id: userId });
 
     if (!user) {
-      throw new Error("Usuario no encontrado.");
+      throw new Error("Usuario no encontrado."
+      );
     }
 
     if (user.role === "user") {
@@ -59,7 +60,8 @@ export const changeRole = async (userId) => {
 
 const find = async () => {
   try {
-    await userRepository.find();
+    const users = await userRepository.find();
+    return users;
   } catch (error) {
     throw error;
   }
