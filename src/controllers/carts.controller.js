@@ -121,7 +121,6 @@ router.delete(
       await cartsService.removeAllProductsFromCart(cartId);
       const emptyCart = await cartsService.getCartById(cartId);
       const emptyCartDTO = new CartDTO(emptyCart);
-
       res.status(200).json({ cart: emptyCartDTO });
     } catch (error) {
       if (error instanceof HttpError) {

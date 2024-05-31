@@ -3,6 +3,7 @@ import config from "../configs/config.js";
 import ProductRepository from "../repositories/product.repository.js";
 import transport from "../utils/nodemailer.util.js";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import HttpError from "../utils/HttpError.js";
 
 const productRepository = new ProductRepository();
 
@@ -37,6 +38,12 @@ const getAll = async (page, limit, sort, category, available) => {
 const getOne = async (productId) => {
   try {
     const product = await productRepository.getProductById(productId);
+    if (!product) {
+      throw new HttpError(
+        HTTP_RESPONSES.NOT_FOUND,
+        HTTP_RESPONSES.NOT_FOUND_CONTENT
+      );
+    }
     return product;
   } catch (error) {
     throw error;
@@ -108,8 +115,11 @@ const validateRequiredFields = async (newProductInfo) => {
     ];
 
     for (const field of requiredFields) {
-      if (!newProductInfo[field]) {
-        throw new Error(HTTP_RESPONSES.BAD_REQUEST_CONTENT);
+      if (typeof newProductInfo[field] === "undefined") {
+        throw new HttpError(
+          HTTP_RESPONSES.BAD_REQUEST,
+          HTTP_RESPONSES.BAD_REQUEST_CONTENT
+        );
       }
     }
   } catch (error) {
@@ -128,9 +138,9 @@ const assignProductOwner = async (user, newProductInfo) => {
   }
 };
 
-const createProductDto = async (requestData) => {
-  return new NewProductDto(requestData);
-};
+// const createProductDto = async (requestData) => {
+//   return new NewProductDto(requestData);
+// };
 
 const updateProduct = async (productId, productInfo) => {
   await productRepository.updateOne(productId, productInfo);
@@ -145,6 +155,6 @@ export default {
   sendDeletedProductEmail,
   assignProductOwner,
   validateRequiredFields,
-  createProductDto,
+  // createProductDto,
   updateProduct,
 };

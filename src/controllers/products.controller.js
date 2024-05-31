@@ -89,12 +89,12 @@ router.put(
   async (req, res) => {
     try {
       const { pid } = req.params;
-      const productInfo = await productsService.createProductDto(req.body);
+      const productInfo = new NewProductDto(req.body);
       await productsService.validateRequiredFields(productInfo);
       await productsService.updateOne(pid, productInfo);
       res
         .status(HTTP_RESPONSES.UPDATED)
-        .json({ status: HTTP_RESPONSES.UPDATE_SUCCESS });
+        .json({ status: HTTP_RESPONSES.UPDATE_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
         return res
