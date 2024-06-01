@@ -34,27 +34,18 @@ const sendRegistrationEmail = async (email) => {
 };
 
 // Cambio de roles de usuario
-export const changeRole = async (userId) => {
+export const changeRole = async (userId, user) => {
   try {
-    const user = await userRepository.findOne({ _id: userId });
-
-    if (!user) {
-      throw new Error("Usuario no encontrado."
-      );
-    }
-
     if (user.role === "user") {
       // Verificar documentos solo si el usuario es "user" y quiere ser "premium"
       await verifyUserDocuments(userId);
       user.role = "premium";
-    } else {
-      user.role = "user";
+      return await userRepository.save(user);
     }
-
+    user.role = "user";
     await userRepository.save(user);
   } catch (error) {
-    // throw error;
-    throw new Error("Error al cambiar el rol del usuario: " + error.message);
+    throw error;
   }
 };
 
@@ -70,12 +61,6 @@ const find = async () => {
 const findOne = async (option) => {
   try {
     const user = await userRepository.findOne(option);
-    if (!user) {
-      throw new HttpError(
-        HTTP_RESPONSES.BAD_REQUEST,
-        HTTP_RESPONSES.BAD_REQUEST_CONTENT
-      );
-    }
     return user;
   } catch (error) {
     throw error;
@@ -150,21 +135,26 @@ const verifyUserDocuments = async (userId) => {
     );
 
     if (!hasAllRequiredDocuments) {
-      throw new Error("No ha cargado todos los documentos necesarios.");
+      throw new HttpError(
+        HTTP_RESPONSES.BAD_REQUEST,
+        HTTP_RESPONSES.BAD_REQUEST_CONTENT
+      );
     }
   } catch (error) {
-    throw new Error(
-      "Error al verificar los documentos del usuario: " + error.message
-    );
+    throw error;
   }
 };
 
 async function findUsersExcludingAdmin() {
-  const users = await find();
-  const usersDTO = users.map(
-    (user) => new UserDTO(user.first_name, user.email, user.role, user._id)
-  );
-  return usersDTO.filter((userDTO) => userDTO.role !== "admin");
+  try {
+    const users = await find();
+    const usersDTO = users.map(
+      (user) => new UserDTO(user.first_name, user.email, user.role, user._id)
+    );
+    return usersDTO.filter((userDTO) => userDTO.role !== "admin");
+  } catch (error) {
+    throw error;
+  }
 }
 
 export default {

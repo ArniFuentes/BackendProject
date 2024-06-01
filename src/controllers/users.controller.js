@@ -4,6 +4,7 @@ import userService from "../services/users.service.js";
 import authRoleMiddleware from "../middlewares/auth-role.middlewares.js";
 import upload from "../utils/multerConfig.js";
 import HTTP_RESPONSES from "../constants/http-responses.contant.js";
+import HttpError from "../utils/HttpError.js";
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.get(
       const filteredUsersDTO = await userService.findUsersExcludingAdmin();
       res.json({ message: filteredUsersDTO });
     } catch (error) {
+      if (error instanceof HttpError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -27,14 +31,19 @@ router.get(
 router.get(
   "/:uid",
   passport.authenticate("current", { session: false }),
+  authRoleMiddleware(["admin"]),
   async (req, res) => {
     try {
       const { uid } = req.params;
-      const user = await userService.findOne(uid);
-      res.status(200).json({ message: user });
+      const user = await userService.findOne({ _id: uid });
+      res.json({ message: user });
     } catch (error) {
-      req.logger.error(error);
-      res.status(500).json({ error });
+      if (error instanceof HttpError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -45,11 +54,15 @@ router.post(
   passport.authenticate("register", { session: false }),
   async (req, res) => {
     try {
-      res.status(201).json({ status: "success", message: "User registered" });
+      res
+        .status(HTTP_RESPONSES.CREATED)
+        .json({ message: HTTP_RESPONSES.CREATED_CONTENT });
       await userService.sendRegistrationEmail(req.body.email);
     } catch (error) {
       req.logger.error(error);
-      res.status(500).json({ status: "Error", error: "Internal Server Error" });
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -62,15 +75,17 @@ router.put(
   async (req, res) => {
     try {
       const userId = req.params.uid;
-
+      const user = await userService.findOne({ _id: userId });
       await userService.verifyUserDocuments(userId);
-      await userService.changeRole(userId);
-
-      res
-        .status(200)
-        .json({ message: "Rol de usuario actualizado exitosamente." });
+      await userService.changeRole(userId, user);
+      res.json({ message: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      if (error instanceof HttpError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -82,9 +97,11 @@ router.post(
   upload.any(), // Utiliza el middleware de Multer para manejar la subida de archivos
   async (req, res) => {
     try {
-      res.status(200).json({ message: "Documentos subidos exitosamente" });
+      res.json({ message: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
-      res.status(400).json({ error: error });
+      res
+        .status(HTTP_RESPONSES.BAD_REQUEST)
+        .json({ error: HTTP_RESPONSES.BAD_REQUEST_CONTENT });
     }
   }
 );
@@ -103,12 +120,12 @@ router.delete(
         await userService.sendInactiveUserEmail(user.email);
       }
 
-      res
-        .status(200)
-        .json({ message: "Usuarios inactivos eliminados correctamente" });
+      res.json({ message: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
       req.logger.error(error);
-      res.status(500).json({ error: "Error interno del servidor" });
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
@@ -120,10 +137,14 @@ router.delete(
   async (req, res) => {
     try {
       await userService.deleteOne(req.params.uid);
-      res.status(200).json({ message: "Usuario eliminado correctamente" });
+      res.json({ message: "Usuario eliminado correctamente" });
     } catch (error) {
-      req.logger.error(error);
-      res.status(500).json({ error });
+      if (error instanceof HttpError) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+      res
+        .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
+        .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
     }
   }
 );
