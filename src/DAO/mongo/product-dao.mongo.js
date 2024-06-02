@@ -1,31 +1,39 @@
+import HTTP_RESPONSES from "../../constants/http-responses.contant.js";
 import Product from "../../models/product.model.js";
 
 class ProductDAO {
-  async getProducts(page = 1, limit = 10, sortOptions = {}, filterOptions = {}) {
+  async getProducts(
+    page = 1,
+    limit = 10,
+    sortOptions = {},
+    filterOptions = {}
+  ) {
     try {
       const options = {
         page: page,
         limit: limit,
         sort: sortOptions,
-        lean: true, 
+        lean: true,
       };
-    
+
       const query = filterOptions;
-    
       const result = await Product.paginate(query, options);
       return result;
-      
     } catch (error) {
       throw error;
     }
   }
-  
+
   async getProductById(productId) {
     try {
-      // Obtener un producto por su ID utilizando el método findById de mongoose
       const product = await Product.findById(productId);
+      if (!product) {
+        throw new HttpError(
+          HTTP_RESPONSES.NOT_FOUND,
+          HTTP_RESPONSES.NOT_FOUND_CONTENT
+        );
+      }
       return product;
-      
     } catch (error) {
       throw error;
     }
@@ -34,18 +42,23 @@ class ProductDAO {
   async createProduct(newProductInfo) {
     try {
       return await Product.create(newProductInfo);
-      
     } catch (error) {
-      console.log("en el catch del dao")
       throw error;
     }
   }
 
   async updateProduct(productId, updatedProductInfo) {
     try {
-      // Utiliza el método updateOne de Mongoose para actualizar el producto
-      await Product.updateOne({ _id: productId }, { $set: updatedProductInfo });
-      
+      const result = await Product.updateOne(
+        { _id: productId },
+        { $set: updatedProductInfo }
+      );
+      if (result.nModified === 0) {
+        throw new HttpError(
+          HTTP_RESPONSES.NOT_FOUND,
+          HTTP_RESPONSES.NOT_FOUND_CONTENT
+        );
+      }
     } catch (error) {
       throw error;
     }
@@ -53,9 +66,14 @@ class ProductDAO {
 
   async deleteProduct(productId) {
     try {
-      // Utiliza el método deleteOne de Mongoose para eliminar el producto
-      return await Product.deleteOne({ _id: productId });
-      
+      const result = await Product.deleteOne({ _id: productId });
+      if (result.deletedCount === 0) {
+        throw new HttpError(
+          HTTP_RESPONSES.NOT_FOUND,
+          HTTP_RESPONSES.NOT_FOUND_CONTENT
+        );
+      }
+      return result;
     } catch (error) {
       throw error;
     }

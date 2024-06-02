@@ -30,7 +30,6 @@ router.get("/", async (req, res) => {
     res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT, payload: products });
   } catch (error) {
     res.status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR).json({
-      status: "error",
       error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT,
     });
   }
@@ -44,9 +43,7 @@ router.get("/:pid", async (req, res) => {
     res.json({ status: HTTP_RESPONSES.SUCCESS, payload: product });
   } catch (error) {
     if (error instanceof HttpError) {
-      return res
-        .status(error.statusCode)
-        .json({ status: "error", error: error.message });
+      return res.status(error.statusCode).json({ error: error.message });
     }
     res
       .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
@@ -70,9 +67,7 @@ router.post(
         .json({ status: HTTP_RESPONSES.CREATED_CONTENT, payload: newProduct });
     } catch (error) {
       if (error instanceof HttpError) {
-        return res
-          .status(error.statusCode)
-          .json({ status: "error", error: error.message });
+        return res.status(error.statusCode).json({ error: error.message });
       }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
@@ -97,9 +92,7 @@ router.put(
         .json({ status: HTTP_RESPONSES.UPDATE_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
-        return res
-          .status(error.statusCode)
-          .json({ status: "error", error: error.message });
+        return res.status(error.statusCode).json({ error: error.message });
       }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
@@ -117,15 +110,12 @@ router.delete(
       const { pid } = req.params;
       const product = await productsService.getOne(pid);
       await productsService.deleteProduct(req.user, product);
-
       res
         .status(HTTP_RESPONSES.DELETED)
         .json({ status: HTTP_RESPONSES.DELETE_SUCCESS });
     } catch (error) {
       if (error instanceof HttpError) {
-        return res
-          .status(error.statusCode)
-          .json({ status: "error", error: error.message });
+        return res.status(error.statusCode).json({ error: error.message });
       }
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
