@@ -17,13 +17,13 @@ h1 {
     position: fixed;
     top: 110px;
     right: 20px;
-    width: 250px;
-    background-color: #f2f2f2;
+    width: 200px;
+    background-color: #000; /* Fondo oscuro */
     padding: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #000;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    color: #000;
+    color: #fff; /* Texto blanco para mejor visibilidad */
     overflow-y: auto;
     max-height: 80vh;
     z-index: 1000;
@@ -182,159 +182,18 @@ h1 {
     background-color: #fff;
     color: #000;
 }
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #070101;
-    color: #fff; /* texto visible en el fondo oscuro */
+
+.carrito {
+    width: 200px;
+    height: auto;
 }
 
-h1 {
-    margin-top: 20px;
-    color: #fff;
-    margin-left: 20px;
+.carrito {
+    width: 100px;
+    height: auto;
+    cursor: pointer; /* Cambia el cursor para indicar que la imagen es clicable */
 }
 
-/* Estilos para posicionar el carrito en la parte derecha */
-.cart {
-    position: fixed;
-    top: 110px;
-    right: 20px;
-    width: 250px;
-    background-color: #f2f2f2;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #000; /* Texto negro para mejor visibilidad */
-}
-
-.product-list {
-    margin-top: 50px;
-    margin-left: 300px;
-    margin-right: 300px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.buttons-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+#cart {
     text-align: center;
-    z-index: 1000;
-    display: flex; /* Utilizar un modelo de caja flexible para alinear los botones horizontalmente */
-    justify-content: center; /* Centrar los botones horizontalmente */
 }
-
-.buttons-container button {
-    background-color: #000;
-    color: #15e019;
-    border: 2px solid #15e019;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    margin: 0 5px; /* Espaciado horizontal entre los botones */
-}
-
-.buttons-container button:hover {
-    background-color: #15e019;
-    color: #fff;
-}
-
-/* Estilos para resaltar los productos */
-.product {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    position: relative;
-    color: #000; /* Texto negro para mejor visibilidad */
-}
-
-.product h3 {
-    margin-bottom: 90px;
-}
-
-.product p {
-    text-align: left;
-    margin-right: 10px;
-    position: absolute;
-    top: calc(50% - 20px);
-    left: 2;
-}
-
-.product button {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-/* Estilos para el botón de inicio de sesión */
-.login-button {
-    position: fixed;
-    top: 20px;
-    right: 120px;
-    background-color: #000;
-    color: #15e019;
-    border: 2px solid #15e019;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.login-button:hover {
-    background-color: #15e019;
-    color: #fff;
-}
-
-/* Estilos para el botón de registro de usuario */
-.signup-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #000;
-    color: #15e019;
-    border: 2px solid #15e019;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.signup-button:hover {
-    background-color: #15e019;
-    color: #fff;
-}
-
-/* Estilos para los elementos con la clase .product */
-.product {
-    background-color: #15e019;
-    color: #050505; /* Texto negro */
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-/* Estilos para los botones con la clase .productButton */
-.productButton {
-    background-color: #000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.productButton:hover {
-    background-color: #fff;
-    color: #000;
-}
-  
