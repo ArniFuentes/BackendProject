@@ -13,7 +13,7 @@ h1 {
 }
 
 /* Estilos para el carrito */
-.cart {
+.carrito {
     position: fixed;
     top: 110px;
     right: 20px;
@@ -28,42 +28,6 @@ h1 {
     max-height: 80vh;
     z-index: 1000;
     transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.cart h2 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-}
-
-.cart ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.cart li {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.cart button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #15e019;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.cart button:hover {
-    background-color: #12c017;
 }
 
 .product-list {
@@ -197,3 +161,4 @@ h1 {
 #cart {
     text-align: center;
 }
+
