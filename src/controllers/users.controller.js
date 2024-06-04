@@ -113,16 +113,9 @@ router.delete(
   authRoleMiddleware(["admin"]),
   async (req, res) => {
     try {
-      const inactiveUsers = await userService.getInactiveUsers();
-
-      for (const user of inactiveUsers) {
-        await userService.deleteOne(user._id);
-        await userService.sendInactiveUserEmail(user.email);
-      }
-
+      await userService.removeInactiveUsers();
       res.json({ message: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
-      req.logger.error(error);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -137,7 +130,7 @@ router.delete(
   async (req, res) => {
     try {
       await userService.deleteOne(req.params.uid);
-      res.json({ message: "Usuario eliminado correctamente" });
+      res.json({ message: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
         return res.status(error.statusCode).json({ error: error.message });

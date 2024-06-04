@@ -69,9 +69,9 @@ const findOne = async (option) => {
 
 const getInactiveUsers = async () => {
   try {
-    const users = await userRepository.find();
+    const users = await find();
     const currentTime = new Date();
-    return users.filter((user) => {
+    const inactiveUsers = users.filter((user) => {
       const millisecondsPerDay = 86400000;
       const differenceInDays = Math.floor(
         (currentTime - user.last_connection) / millisecondsPerDay
@@ -79,6 +79,7 @@ const getInactiveUsers = async () => {
       const days = 2;
       return differenceInDays >= days;
     });
+    return inactiveUsers;
   } catch (error) {
     throw error;
   }
@@ -157,6 +158,18 @@ async function findUsersExcludingAdmin() {
   }
 }
 
+const removeInactiveUsers = async () => {
+  try {
+    const inactiveUsers = await getInactiveUsers();
+    for (const user of inactiveUsers) {
+      await deleteOne(user._id);
+      await sendInactiveUserEmail(user.email);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   sendRegistrationEmail,
   changeRole,
@@ -167,4 +180,5 @@ export default {
   getInactiveUsers,
   verifyUserDocuments,
   findUsersExcludingAdmin,
+  removeInactiveUsers,
 };
