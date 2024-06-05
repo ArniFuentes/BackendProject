@@ -14,8 +14,6 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true },
   category: { type: String, required: true },
   thumbnails: { type: Object, default: [] },
-  // Al momento de responder sólo entregar los que tengan status true
-  status: { type: Boolean, default: true },
   createdAt: Date,
   updatedAt: Date,
   // Referencia a la persona que creó el producto
