@@ -12,24 +12,30 @@ const getUserName = async () => {
       icon: "success",
     });
 
-    socket.emit("newUser", { userName: userName.value });
+    const response = await fetch("/api/sessions/current");
+    if (response.ok) {
+      const data = await response.json();
+      const userEmail = data.user.email;
 
-    socket.on("userConnected", (user) => {
-      Swal.fire({
-        text: `Se acaba de conectar ${user.userName}`,
+      socket.emit("newUser", { userName: userName.value, userEmail });
+
+      socket.on("userConnected", (user) => {
+        Swal.fire({
+          text: `Se acaba de conectar ${user.userName}`,
+        });
       });
-    });
 
-    chatBox.addEventListener("keyup", (e) => {
-      // El evento es un enter?
-      if (e.key === "Enter") {
-        // Data ingresada al cuadro
-        const data = { userName: userName.value, message: chatBox.value };
-        chatBox.value = "";
-        // Apenas se precione enter se debe emitir un evento y enviar al servidor
-        socket.emit("message", data);
-      }
-    });
+      chatBox.addEventListener("keyup", (e) => {
+        // El evento es un enter?
+        if (e.key === "Enter") {
+          // Data ingresada al cuadro
+          const data = { userName: userName.value, userEmail, message: chatBox.value };
+          chatBox.value = "";
+          // Apenas se precione enter se debe emitir un evento y enviar al servidor
+          socket.emit("message", data);
+        }
+      });
+    }
   } catch (error) {
     console.log(error);
   }

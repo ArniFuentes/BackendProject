@@ -2,6 +2,7 @@ import logger from "./utils/winston/factory.js";
 import app from "./server.js";
 import { Server } from "socket.io";
 import config from "./configs/config.js";
+import Message from "./models/message.model.js";
 
 const chats = [];
 const httpServer = app.listen(config.port, () => {
@@ -20,9 +21,19 @@ io.on("connection", (socket) => {
     socket.emit("messageLogs", chats);
   });
   // Escuchar el evento message (capturarlo) del cliente para obtener la data
-  socket.on("message", (data) => {
-    chats.push(data);
-    // Crear el evento messageLogs y enviar la data obtenida del evento message a todos
-    io.emit("messageLogs", chats);
+  socket.on("message", async (data) => {
+    try {
+      const newMessage = new Message({
+        user: data.userEmail, 
+        message: data.message,
+      });
+
+      await newMessage.save(); 
+      chats.push(data);
+      // Crear el evento messageLogs y enviar la data obtenida del evento message a todos
+      io.emit("messageLogs", chats);
+    } catch (error) {
+      
+    }
   });
 });
