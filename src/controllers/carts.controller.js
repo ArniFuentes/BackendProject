@@ -20,8 +20,10 @@ router.post(
       res.status(HTTP_RESPONSES.CREATED).json({ cart: DtoCreatedCart });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -38,15 +40,15 @@ router.get(
     try {
       const cartId = req.params.cid;
       const userId = req.user.id;
-
-      // Verificar que el carrito pertenece al usuario autenticado
       const cart = await cartsService.verifyCartOwnership(cartId, userId);
-      const cartDTO = new CartDTO(cart);
+      const cartDTO = new CartDTO(cart);0
       res.json({ cart: cartDTO });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -75,8 +77,10 @@ router.post(
         .json({ status: HTTP_RESPONSES.CREATED_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -100,8 +104,10 @@ router.delete(
         .json({ status: HTTP_RESPONSES.DELETE_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -124,8 +130,10 @@ router.delete(
       res.status(200).json({ cart: emptyCartDTO });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -152,8 +160,10 @@ router.put(
       res.json({ status: HTTP_RESPONSES.SUCCESS_CONTENT, cart: cartDto });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -184,8 +194,10 @@ router.put(
         .json({ status: HTTP_RESPONSES.SUCCESS_CONTENT });
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
@@ -206,8 +218,10 @@ router.post(
       res.json(result);
     } catch (error) {
       if (error instanceof HttpError) {
+        req.logger.error(`HttpError: ${error.message}`);
         return res.status(error.statusCode).json({ error: error.message });
       }
+      req.logger.error(`Unexpected error: ${error.message}`);
       res
         .status(HTTP_RESPONSES.INTERNAL_SERVER_ERROR)
         .json({ error: HTTP_RESPONSES.INTERNAL_SERVER_ERROR_CONTENT });
